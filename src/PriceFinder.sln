@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.106
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceFinder", "PriceFinder\PriceFinder.csproj", "{EAFE73CB-4FA1-43A0-98B8-30B44B60C151}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceFinder.Tests", "PriceFinder.Tests\PriceFinder.Tests.csproj", "{1333D892-EE97-4B79-80ED-33F1F2F64139}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EAFE73CB-4FA1-43A0-98B8-30B44B60C151}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAFE73CB-4FA1-43A0-98B8-30B44B60C151}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAFE73CB-4FA1-43A0-98B8-30B44B60C151}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAFE73CB-4FA1-43A0-98B8-30B44B60C151}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1333D892-EE97-4B79-80ED-33F1F2F64139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1333D892-EE97-4B79-80ED-33F1F2F64139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1333D892-EE97-4B79-80ED-33F1F2F64139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1333D892-EE97-4B79-80ED-33F1F2F64139}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {401E64DC-EBB3-4766-94EB-4AB8C2DDEFC3}
+	EndGlobalSection
+EndGlobal
