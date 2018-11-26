@@ -1,0 +1,49 @@
+﻿@using Newtonsoft.Json
+@model PriceChat.Web.Controllers.ChartData
+@{
+    ViewData["Title"] = "About";
+}
+
+@{
+    var labels = JsonConvert.SerializeObject(Model.Labels);
+}
+
+<canvas id="myChart" width="400" height="200"></canvas>
+<script>
+    var ctx = document.getElementById("myChart");
+
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }   
+
+    var myChart = new Chart(ctx,
+        {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(labels),
+                datasets: [
+                    @foreach (var dataSet in Model.DataSets)
+                    {
+                        var data = JsonConvert.SerializeObject(dataSet.Data);
+                        @:{ "label": "@dataSet.Label", "data": @Html.Raw(data), "fill": false, "borderColor": getRandomColor(), "fillColor": getRandomColor() },
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [
+                        {
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+</script>

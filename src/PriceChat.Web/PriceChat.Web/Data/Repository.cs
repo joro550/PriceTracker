@@ -22,7 +22,7 @@ namespace PriceChat.Web.Data
         {
             var tableQuery = new TableQuery<T>();
             var results = await _tableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
-            return results.Results;
+            return results.Results.OrderBy(result => result.Timestamp).ToList();
         }
 
         public async Task<List<T>> ByPartitionKey(string value)
