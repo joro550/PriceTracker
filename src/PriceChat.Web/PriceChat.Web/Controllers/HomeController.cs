@@ -43,7 +43,7 @@ namespace PriceChat.Web.Controllers
 
             var chartData = new ChartData
             {
-                Labels = prices.Select(p => p.Timestamp.ToString("yyyy-m-d")).Distinct().ToList()
+                Labels = prices.Select(p => p.Timestamp.ToString("yyyy-M-d")).Distinct().ToList()
             };
 
             foreach (var groupedPrice in groupedPrices)
