@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -30,7 +31,7 @@ namespace PriceChat.Web.Data
                 .Where($"PartitionKey eq '{value}'");
 
             var results = await _tableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
-            return results.Results;
+            return results.Results.OrderBy(result => result.Timestamp).ToList();
         }
     }
 }
