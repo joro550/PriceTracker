@@ -1,0 +1,24 @@
+﻿@model List<Item>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<table class='table'>
+    <thead>
+    <tr>
+        <td>Id</td>
+        <td>Retailer</td>
+        <td>Category</td>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.ActionLink(item.Id, "Prices", "Home", new { itemId = item.Id})</td>
+            <td>@item.Retailer</td>
+            <td>@item.Category</td>
+        </tr>
+    }
+    </tbody>
+</table>
