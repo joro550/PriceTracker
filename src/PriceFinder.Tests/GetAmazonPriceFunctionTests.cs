@@ -31,6 +31,7 @@ namespace PriceFinder.Tests
         [Theory]
         [InlineData("B0725VRJ6J", "£47.99", "ItemOnSale")]
         [InlineData("B005KK88CM", "£173.00", "AmazonOnSale")]
+        [InlineData("B01C45OD6K", "£39.99", "DvdPage")]
         public async Task GivenAnItemThatIsOnSale_ThenCorrectPriceIsEnteredIntoTheDatabase(string id, string expectedPrice, string typeOfItem)
         {
             var queueItem = new QueueItem {Id = id };

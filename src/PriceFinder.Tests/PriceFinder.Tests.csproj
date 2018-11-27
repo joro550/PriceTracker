@@ -8,11 +8,13 @@
 
   <ItemGroup>
     <None Remove="Pages\Amazon\AmazonOnSale.html" />
+    <None Remove="Pages\Amazon\DvdPage.html" />
     <None Remove="Pages\Amazon\ItemOnSale.html" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Pages\Amazon\AmazonOnSale.html" />
+    <EmbeddedResource Include="Pages\Amazon\DvdPage.html" />
     <EmbeddedResource Include="Pages\Amazon\ItemOnSale.html" />
   </ItemGroup>
 
