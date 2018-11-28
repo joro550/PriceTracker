@@ -33,5 +33,8 @@ namespace PriceChat.Web.Data
             var results = await _tableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
             return results.Results.OrderBy(result => result.Timestamp).ToList();
         }
+
+        public async Task Add(T item) 
+            => await _tableClient.ExecuteAsync(TableOperation.Insert(item));
     }
 }

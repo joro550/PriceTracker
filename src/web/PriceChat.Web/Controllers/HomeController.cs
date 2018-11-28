@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PriceChat.Web.Data;
+using PriceChat.Web.Models;
 using Item = PriceChat.Web.Models.Item;
 using ItemPrice = PriceChat.Web.Models.ItemPrice;
 
@@ -11,11 +12,11 @@ namespace PriceChat.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ItemRepository _itemRepository;
-        private readonly ItemPriceRepository _itemPriceRepository;
+        private readonly IItemRepository _itemRepository;
+        private readonly IItemPriceRepository _itemPriceRepository;
         private readonly IMapper _mapper;
 
-        public HomeController(ItemRepository itemRepository, ItemPriceRepository itemPriceRepository, IMapper mapper)
+        public HomeController(IItemRepository itemRepository, IItemPriceRepository itemPriceRepository, IMapper mapper)
         {
             _itemRepository = itemRepository;
             _itemPriceRepository = itemPriceRepository;
@@ -59,17 +60,5 @@ namespace PriceChat.Web.Controllers
 
             return View(chartData);
         }
-    }
-
-    public class ChartData
-    {
-        public List<string> Labels { get; set; } = new List<string>();
-        public List<ChatDataSets> DataSets { get; set;  } = new List<ChatDataSets>();
-    }
-
-    public class ChatDataSets
-    {
-        public string Label { get; set; }
-        public List<string> Data { get; set;  } = new List<string>();
     }
 }

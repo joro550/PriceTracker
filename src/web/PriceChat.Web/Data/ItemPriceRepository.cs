@@ -1,8 +1,16 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace PriceChat.Web.Data
 {
-    public class ItemPriceRepository : Repository<ItemPrice>
+    public interface IItemPriceRepository
+    {
+        Task<List<ItemPrice>> GetAll();
+        Task<List<ItemPrice>> ByPartitionKey(string value);
+    }
+
+    public class ItemPriceRepository : Repository<ItemPrice>, IItemPriceRepository
     {
         public ItemPriceRepository(CloudTableClient client)
             : base(client.GetTableReference("prices"))

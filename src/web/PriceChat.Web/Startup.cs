@@ -30,10 +30,11 @@ namespace PriceChat.Web
             var storageAccount =
                 CloudStorageAccount.Parse(_configuration.GetConnectionString("StorageConnectionString"));
 
-            services.AddAutoMapper();
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
+            services.AddScoped(s => config.CreateMapper());
             services.AddScoped(s => storageAccount.CreateCloudTableClient());
-            services.AddScoped<ItemRepository>();
-            services.AddScoped<ItemPriceRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IItemPriceRepository, ItemPriceRepository>();
             services.AddScoped(s => storageAccount.CreateCloudTableClient());
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
