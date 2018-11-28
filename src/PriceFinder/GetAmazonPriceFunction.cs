@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
-using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 using Microsoft.Azure.WebJobs;
 using Microsoft.WindowsAzure.Storage.Queue;
@@ -21,7 +20,8 @@ namespace PriceFinder
         private static readonly List<string> HtmlClassesToCheck = new List<string> {"offer-price"};
 
         [FunctionName("GetPrice")]
-        public static async Task Run([QueueTrigger("item-queue", Connection = "QueueConnectionString")]CloudQueueMessage message,
+        public static async Task Run(
+            [QueueTrigger("amazon-item-queue", Connection = "QueueConnectionString")]CloudQueueMessage message,
             [Table("prices", Connection = "TableConnectionString")] CloudTable prices)
         {
             var queueItem = message.GetMessageAs<QueueItem>();

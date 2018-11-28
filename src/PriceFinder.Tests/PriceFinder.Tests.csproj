@@ -10,12 +10,14 @@
     <None Remove="Pages\Amazon\AmazonOnSale.html" />
     <None Remove="Pages\Amazon\DvdPage.html" />
     <None Remove="Pages\Amazon\ItemOnSale.html" />
+    <None Remove="Pages\Argos\Item.html" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Pages\Amazon\AmazonOnSale.html" />
     <EmbeddedResource Include="Pages\Amazon\DvdPage.html" />
     <EmbeddedResource Include="Pages\Amazon\ItemOnSale.html" />
+    <EmbeddedResource Include="Pages\Argos\Item.html" />
   </ItemGroup>
 
   <ItemGroup>
