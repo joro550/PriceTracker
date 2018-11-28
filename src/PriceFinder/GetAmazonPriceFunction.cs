@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
+using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 using Microsoft.Azure.WebJobs;
 using Microsoft.WindowsAzure.Storage.Queue;
@@ -17,6 +18,7 @@ namespace PriceFinder
     {
         public static HttpClient Client { get; set; } = new HttpClient();
         private static readonly List<string> HtmlIdsToCheck = new List<string> { "priceblock_dealprice", "priceblock_ourprice" };
+        private static readonly List<string> HtmlClassesToCheck = new List<string> {"offer-price"};
 
         [FunctionName("GetPrice")]
         public static async Task Run(
@@ -28,16 +30,7 @@ namespace PriceFinder
 
             var htmlParser = new HtmlParser();
             var pageContent = await itemResult.Content.ReadAsStringAsync();
-            var document = await htmlParser.ParseAsync(pageContent);
-
-            IElement dealPriceElement = null;
-
-            foreach (var htmlId in HtmlIdsToCheck)
-            {
-                dealPriceElement = document.QuerySelectorAll($"#{htmlId}").FirstOrDefault();
-                if (dealPriceElement != null)
-                    break;
-            }
+            var dealPriceElement = GetPriceElement(await htmlParser.ParseAsync(pageContent));
 
             await prices.ExecuteAsync(TableOperation.Insert(new ItemPrice
             {
@@ -45,6 +38,27 @@ namespace PriceFinder
                 RowKey = $"{Guid.NewGuid():N}",
                 Price = dealPriceElement?.InnerHtml
             }));
+        }
+
+        private static IElement GetPriceElement(IParentNode document)
+        {
+            IElement dealPriceElement;
+
+            foreach (var htmlId in HtmlIdsToCheck)
+            {
+                dealPriceElement = document.QuerySelectorAll($"#{htmlId}").FirstOrDefault();
+                if (dealPriceElement != null)
+                    return dealPriceElement;
+            }
+
+            foreach (var htmlClass in HtmlClassesToCheck)
+            {
+                dealPriceElement = document.QuerySelectorAll($".{htmlClass}").FirstOrDefault();
+                if (dealPriceElement != null)
+                    return dealPriceElement; ;
+            }
+
+            return null;
         }
     }
 }
