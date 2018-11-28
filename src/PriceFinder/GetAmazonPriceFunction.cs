@@ -19,7 +19,8 @@ namespace PriceFinder
         private static readonly List<string> HtmlIdsToCheck = new List<string> { "priceblock_dealprice", "priceblock_ourprice" };
 
         [FunctionName("GetPrice")]
-        public static async Task Run([QueueTrigger("item-queue", Connection = "QueueConnectionString")]CloudQueueMessage message,
+        public static async Task Run(
+            [QueueTrigger("amazon-item-queue", Connection = "QueueConnectionString")]CloudQueueMessage message,
             [Table("prices", Connection = "TableConnectionString")] CloudTable prices)
         {
             var queueItem = message.GetMessageAs<QueueItem>();
