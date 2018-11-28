@@ -16,7 +16,7 @@ namespace PriceFinder.Tests.Fakes
 
         private readonly List<string> _requests = new List<string>();
 
-        public FileLoaderMessageHandler(string itemType, string retailer = "Amazon")
+        public FileLoaderMessageHandler(string itemType, string retailer)
         {
             _itemType = itemType;
             _retailer = retailer;

@@ -37,7 +37,7 @@ namespace PriceFinder.Tests
             var queueItem = new QueueItem {Id = id };
             var message = new CloudQueueMessage(JsonConvert.SerializeObject(queueItem));
 
-            GetAmazonPriceFunction.Client = new HttpClient(new FileLoaderMessageHandler(typeOfItem));
+            GetAmazonPriceFunction.Client = new HttpClient(new FileLoaderMessageHandler(typeOfItem, "Amazon"));
             await GetAmazonPriceFunction.Run(message, _tableReference);
 
             var query = new TableQuery<ItemPrice>().Where($"PartitionKey eq '{id}'");
@@ -49,13 +49,13 @@ namespace PriceFinder.Tests
         }
 
         [Theory]
-        [InlineData("B0725VRJ6J", "£47.99", "ItemOnSale")]
-        public async Task GivenAnItemId_ThenCorrectRequestIsMadeToRetrieveItem(string id, string expectedPrice, string typeOfItem)
+        [InlineData("B0725VRJ6J", "ItemOnSale")]
+        public async Task GivenAnItemId_ThenCorrectRequestIsMadeToRetrieveItem(string id, string typeOfItem)
         {
             var queueItem = new QueueItem { Id = id };
             var message = new CloudQueueMessage(JsonConvert.SerializeObject(queueItem));
 
-            var fileLoaderMessageHandler = new FileLoaderMessageHandler(typeOfItem);
+            var fileLoaderMessageHandler = new FileLoaderMessageHandler(typeOfItem, "Amazon");
             GetAmazonPriceFunction.Client = new HttpClient(fileLoaderMessageHandler);
             await GetAmazonPriceFunction.Run(message, _tableReference);
 
