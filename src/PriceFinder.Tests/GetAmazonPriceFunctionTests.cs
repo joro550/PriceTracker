@@ -31,7 +31,7 @@ namespace PriceFinder.Tests
         [Theory]
         [InlineData("B0725VRJ6J", "£47.99", "ItemOnSale")]
         [InlineData("B005KK88CM", "£173.00", "AmazonOnSale")]
-        public async Task GivenAnItemThatIsOnSale_ThenCorrectPriceIsEnteredIntoTheDatabase(string id, string expectedPrice, string typeOfItem)
+        public async Task GivenAnItemId_ThenCorrectPriceIsEnteredIntoTheDatabase(string id, string expectedPrice, string typeOfItem)
         {
             var queueItem = new QueueItem {Id = id };
             var message = new CloudQueueMessage(JsonConvert.SerializeObject(queueItem));
@@ -45,6 +45,21 @@ namespace PriceFinder.Tests
 
             Assert.NotNull(itemPrice);
             Assert.Equal(expectedPrice, itemPrice.Price);
+        }
+
+        [Theory]
+        [InlineData("B0725VRJ6J", "£47.99", "ItemOnSale")]
+        public async Task GivenAnItemId_ThenCorrectRequestIsMadeToRetrieveItem(string id, string expectedPrice, string typeOfItem)
+        {
+            var queueItem = new QueueItem { Id = id };
+            var message = new CloudQueueMessage(JsonConvert.SerializeObject(queueItem));
+
+            var fileLoaderMessageHandler = new FileLoaderMessageHandler(typeOfItem);
+            GetAmazonPriceFunction.Client = new HttpClient(fileLoaderMessageHandler);
+            await GetAmazonPriceFunction.Run(message, _tableReference);
+
+            var requests = fileLoaderMessageHandler.GetRequests();
+            Assert.Contains($"https://www.amazon.co.uk/dp/{id}", requests);
         }
     }
 }
