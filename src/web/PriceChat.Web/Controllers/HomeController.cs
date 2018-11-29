@@ -26,39 +26,21 @@ namespace PriceChat.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var items = await _itemRepository.GetAll();
-            var itemViewModel = _mapper.Map<List<Item>>(items);
-            return View(itemViewModel);
+            var viewModel = _mapper.Map<List<Item>>(items);
+            return View(viewModel);
         }
 
         public async Task<IActionResult> Prices(string itemId)
         {
             var prices = await _itemPriceRepository.ByPartitionKey(itemId);
-            var itemPriceViewModel = _mapper.Map<List<ItemPrice>>(prices);
-            return View(itemPriceViewModel);
+            var viewModel = _mapper.Map<List<ItemPrice>>(prices);
+            return View(viewModel);
         }
 
         public async Task<IActionResult> AllPrices()
         {
             var prices = await _itemPriceRepository.GetAll();
-            var groupedPrices = prices.GroupBy(price => price.PartitionKey);
-
-            var chartData = new ChartData
-            {
-                Labels = prices.Select(p => p.Timestamp.ToString("yyyy-M-d")).Distinct().ToList()
-            };
-
-            foreach (var groupedPrice in groupedPrices)
-            {
-                var dataSet = new ChatDataSets{Label = groupedPrice.Key};
-                foreach (var itemPrice in groupedPrice.OrderBy(price => price.Timestamp))
-                {
-                    dataSet.Data.Add(itemPrice.Price.Remove(0, 1));
-                }
-
-                chartData.DataSets.Add(dataSet);
-            }
-
-            return View(chartData);
+            return View(prices.Any() ? ChartData.FromItemPrices(prices) : new ChartData());
         }
     }
 }

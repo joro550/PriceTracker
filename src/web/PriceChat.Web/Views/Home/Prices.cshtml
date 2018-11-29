@@ -5,7 +5,7 @@
 }
 
 @{
-    var date = JsonConvert.SerializeObject(Model.Select(m => m.TimeStamp.ToString("yyyy-m-d")));
+    var date = JsonConvert.SerializeObject(Model.Select(m => m.Timestamp.ToString("yyyy-m-d")));
     var prices = JsonConvert.SerializeObject(Model.Select(m => m.Price.Remove(0, 1)));
 }
 

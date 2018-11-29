@@ -4,10 +4,6 @@
     ViewData["Title"] = "About";
 }
 
-@{
-    var labels = JsonConvert.SerializeObject(Model.Labels);
-}
-
 <canvas id="myChart" width="400" height="200"></canvas>
 <script>
     var ctx = document.getElementById("myChart");
@@ -15,17 +11,17 @@
     function getRandomColor() {
         var letters = '0123456789ABCDEF'.split('');
         var color = '#';
-        for (var i = 0; i < 6; i++ ) {
+        for (var i = 0; i < 6; i++) {
             color += letters[Math.floor(Math.random() * 16)];
         }
         return color;
-    }   
+    }
 
     var myChart = new Chart(ctx,
         {
             type: 'line',
             data: {
-                labels: @Html.Raw(labels),
+                labels: @Html.Raw(JsonConvert.SerializeObject(Model.Labels)),
                 datasets: [
                     @foreach (var dataSet in Model.DataSets)
                     {

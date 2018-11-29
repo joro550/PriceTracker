@@ -1,5 +1,3 @@
-using System;
-
 namespace PriceChat.Web.Models
 {
     public class ErrorViewModel

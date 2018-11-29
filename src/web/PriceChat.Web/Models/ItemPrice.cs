@@ -6,6 +6,6 @@ namespace PriceChat.Web.Models
     {
         public string PartitionKey { get; set; }
         public string Price { get; set; }
-        public DateTime TimeStamp { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }
