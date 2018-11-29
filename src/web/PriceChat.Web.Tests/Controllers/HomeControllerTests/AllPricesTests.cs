@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
 using PriceChat.Web.Models;
 using PriceChat.Web.Tests.Fakes;
 using Xunit;
@@ -63,6 +61,39 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
                     .WithItemPriceRepository(repository)
                     .BuildController();
                 
+                var viewResult = await homeController.AllPrices() as ViewResult;
+                Assert.NotNull(viewResult);
+                Assert.Null(viewResult.ViewName);
+
+                var viewModel = viewResult.Model as ChartData;
+                Assert.NotNull(viewModel);
+                viewModel.Should().BeEquivalentTo(CreateChartData(items));
+            }
+
+            [Fact]
+            public async Task WhenPriceIsNull_ThenChartDataHasNoValueForThatDay()
+            {
+                var items = new List<ItemPrice>
+                {
+                    new ItemPrice
+                    {
+                        Price = null,
+                        PartitionKey = "007",
+                        Timestamp = new DateTime(2018, 9, 19)
+                    },
+                    new ItemPrice
+                    {
+                        Price = "£4.00",
+                        PartitionKey = "007",
+                        Timestamp = new DateTime(2018, 9, 20)
+                    }
+                };
+
+                var repository = new ItemPriceRepositoryWithSpecifiedPrices(items);
+                var homeController = _builder
+                    .WithItemPriceRepository(repository)
+                    .BuildController();
+
                 var viewResult = await homeController.AllPrices() as ViewResult;
                 Assert.NotNull(viewResult);
                 Assert.Null(viewResult.ViewName);

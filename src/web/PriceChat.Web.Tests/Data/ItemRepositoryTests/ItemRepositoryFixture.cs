@@ -2,7 +2,7 @@
 using PriceChat.Web.Data;
 using PriceChat.Web.Tests.Fakes;
 
-namespace PriceChat.Web.Tests.Data
+namespace PriceChat.Web.Tests.Data.ItemRepositoryTests
 {
     public class ItemRepositoryFixture : IDisposable
     {

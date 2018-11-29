@@ -17,5 +17,8 @@ namespace PriceChat.Web.Tests.Fakes
 
         public Task<List<ItemPrice>> ByPartitionKey(string value) 
             => Task.FromResult(_itemPrices.Where(price => price.PartitionKey == value).ToList());
+
+        public Task Add(ItemPrice item) 
+            => Task.Run(() => _itemPrices.Add(item));
     }
 }

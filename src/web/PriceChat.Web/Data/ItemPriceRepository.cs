@@ -8,6 +8,7 @@ namespace PriceChat.Web.Data
     {
         Task<List<ItemPrice>> GetAll();
         Task<List<ItemPrice>> ByPartitionKey(string value);
+        Task Add(ItemPrice item);
     }
 
     public class ItemPriceRepository : Repository<ItemPrice>, IItemPriceRepository

@@ -11,5 +11,8 @@ namespace PriceChat.Web.Tests.Fakes
 
         public Task<List<ItemPrice>> ByPartitionKey(string value) 
             => Task.FromResult(new List<ItemPrice>());
+
+        public Task Add(ItemPrice item) 
+            => Task.CompletedTask;
     }
 }

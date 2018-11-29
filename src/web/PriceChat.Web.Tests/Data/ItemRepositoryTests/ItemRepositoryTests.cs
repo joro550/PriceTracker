@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using PriceChat.Web.Data;
 using Xunit;
 
-namespace PriceChat.Web.Tests.Data
+namespace PriceChat.Web.Tests.Data.ItemRepositoryTests
 {
     public class ItemRepositoryTests 
     {

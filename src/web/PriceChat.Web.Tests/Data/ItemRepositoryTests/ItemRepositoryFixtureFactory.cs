@@ -1,4 +1,4 @@
-﻿namespace PriceChat.Web.Tests.Data
+﻿namespace PriceChat.Web.Tests.Data.ItemRepositoryTests
 {
     public class ItemRepositoryFixtureFactory
     {

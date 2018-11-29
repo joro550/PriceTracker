@@ -19,9 +19,7 @@ namespace PriceChat.Web.Models
             {
                 var dataSet = new ChatDataSets{Label = groupedPrice.Key};
                 foreach (var itemPrice in groupedPrice.OrderBy(price => price.Timestamp))
-                {
-                    dataSet.Data.Add(itemPrice.Price.Remove(0, 1));
-                }
+                    dataSet.Data.Add(string.IsNullOrWhiteSpace(itemPrice.Price) ? "" : itemPrice.Price.Remove(0, 1));
 
                 chartData.DataSets.Add(dataSet);
             }
