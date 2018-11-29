@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PriceChat.Web.Models.Items;
 
 namespace PriceChat.Web
 {
@@ -7,6 +8,7 @@ namespace PriceChat.Web
         public AutoMapperProfile()
         {
             CreateMap<Data.Item, Models.Item>();
+            CreateMap<ItemModel, Data.Item>();
             CreateMap<Data.ItemPrice, Models.ItemPrice>();
         }
     }
