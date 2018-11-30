@@ -6,6 +6,8 @@ namespace PriceChat.Web.Models.Items
 {
     public class ItemModel
     {
+        public string PartitionKey => "Product";
+
         [Required]
         public string Id { get; set; }
 

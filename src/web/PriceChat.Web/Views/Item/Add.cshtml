@@ -5,6 +5,31 @@
 
 <div class='row'>
     <div class='col-md-12'>
-
+        <h2>Add Item</h2>
+        <form class='form-horizontal' asp-action='Add' asp-controller='Item' method='post' asp-antiforgery='true'>
+            <div class='form-group'>
+                <label class='col-sm-2 control-label' asp-for='Id'>Id</label>
+                <div class='col-sm-5'>
+                    <input class='form-control' asp-for='Id'>
+                </div>
+            </div>
+            <div class='form-group'>
+                <label class='col-sm-2 control-label' asp-for='Category'>Category</label>
+                <div class='col-sm-5'>
+                    <input class='form-control' asp-for='Category'>
+                </div>
+            </div>
+            <div class='form-group'>
+                <label class='col-sm-2 control-label' asp-for='Retailer'>Retailer</label>
+                <div class='col-sm-5'>
+                    <input class='form-control' asp-for='Retailer'>
+                </div>
+            </div>
+            <div class='form-group'>
+                <div class='col-sm-offset-2 col-sm-10'>
+                    <button type='submit' class='btn btn-default'>Submit</button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

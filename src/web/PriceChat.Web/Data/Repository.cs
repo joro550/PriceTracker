@@ -21,6 +21,7 @@ namespace PriceChat.Web.Data
         public async Task<List<T>> GetAll()
         {
             var tableQuery = new TableQuery<T>();
+
             var results = await _tableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
             return results.Results.OrderBy(result => result.Timestamp).ToList();
         }
@@ -28,8 +29,7 @@ namespace PriceChat.Web.Data
         public async Task<List<T>> ByPartitionKey(string value)
         {
             var tableQuery = new TableQuery<T>()
-                .Where($"PartitionKey eq '{value}'");
-
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, value));
             var results = await _tableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
             return results.Results.OrderBy(result => result.Timestamp).ToList();
         }

@@ -37,8 +37,6 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
 
             var itemController = _builder.WithItemRepository(repository).Build();
             var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
-            var viewModel = result.Model as ItemModel;
-
             Assert.Null(result.ViewName);
 
             var collection = await repository.GetAll();

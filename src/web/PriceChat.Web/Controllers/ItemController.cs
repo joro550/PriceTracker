@@ -23,6 +23,7 @@ namespace PriceChat.Web.Controllers
             => View();
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Add(ItemModel itemModel)
         {
             var validator = new ItemModelValidator();
