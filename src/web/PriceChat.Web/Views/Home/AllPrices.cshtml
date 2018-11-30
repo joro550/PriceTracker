@@ -4,16 +4,17 @@
     ViewData["Title"] = "About";
 }
 
-<canvas id="myChart" width="400" height="200"></canvas>
+<canvas id='myChart' width='400' height='200'></canvas>
 <script>
     var ctx = document.getElementById("myChart");
 
     function getRandomColor() {
-        var letters = '0123456789ABCDEF'.split('');
+        const letters = '0123456789ABCDEF'.split('');
         var color = '#';
-        for (var i = 0; i < 6; i++) {
+
+        for (let i = 0; i < 6; i++)
             color += letters[Math.floor(Math.random() * 16)];
-        }
+
         return color;
     }
 

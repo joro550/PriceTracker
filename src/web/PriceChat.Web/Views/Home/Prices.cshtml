@@ -9,7 +9,7 @@
     var prices = JsonConvert.SerializeObject(Model.Select(m => m.Price.Remove(0, 1)));
 }
 
-<canvas id="myChart" width="400" height="200"></canvas>
+<canvas id='myChart' width='400' height='200'></canvas>
 <script>
     var ctx = document.getElementById("myChart");
     var myChart = new Chart(ctx, {
@@ -17,7 +17,7 @@
         data: {
             labels: @Html.Raw(date),
             datasets: [{
-                label: '# of Votes',
+                label: 'Prices',
                 data: @Html.Raw(prices),
                 "fill": false,
                 "borderColor": "rgb(75, 192, 192)",
