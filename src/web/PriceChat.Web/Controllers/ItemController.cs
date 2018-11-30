@@ -29,7 +29,10 @@ namespace PriceChat.Web.Controllers
             var validationResult = validator.Validate(itemModel);
 
             if (!validationResult.IsValid)
+            {
+                itemModel.Errors = validationResult.Errors;
                 return View(itemModel);
+            }
 
             await _repository.Add(_mapper.Map<Item>(itemModel));
             return View();

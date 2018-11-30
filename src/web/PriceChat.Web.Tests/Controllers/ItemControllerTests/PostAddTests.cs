@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using PriceChat.Web.Models.Items;
 using PriceChat.Web.Tests.Fakes;
@@ -25,8 +26,68 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
             var viewModel = result.Model as ItemModel;
 
             Assert.Null(result.ViewName);
-            Assert.Equal(itemModel, viewModel);
+            itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
             Assert.Empty(await repository.GetAll());
+        }
+
+        [Fact]
+        public async Task GivenAnInvalidItemId_ErrorsContainsCorrectMessage()
+        {
+            var itemModel = new ItemModel();
+            var repository = new ItemRepositoryWithNoItems();
+
+            var itemController = _builder.WithItemRepository(repository).Build();
+            var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
+            var viewModel = result.Model as ItemModel;
+
+            Assert.Null(result.ViewName);
+            itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
+            Assert.Contains("Item Id is required", itemModel.Errors.Select(error => error.ErrorMessage));
+        }
+
+        [Fact]
+        public async Task GivenAnInvalidItemCategory_ErrorsContainsCorrectMessage()
+        {
+            var itemModel = new ItemModel();
+            var repository = new ItemRepositoryWithNoItems();
+
+            var itemController = _builder.WithItemRepository(repository).Build();
+            var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
+            var viewModel = result.Model as ItemModel;
+
+            Assert.Null(result.ViewName);
+            itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
+            Assert.Contains("Item Category is required", itemModel.Errors.Select(error => error.ErrorMessage));
+        }
+
+        [Fact]
+        public async Task GivenAnInvalidItemRetailer_ErrorsContainsCorrectMessage()
+        {
+            var itemModel = new ItemModel();
+            var repository = new ItemRepositoryWithNoItems();
+
+            var itemController = _builder.WithItemRepository(repository).Build();
+            var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
+            var viewModel = result.Model as ItemModel;
+
+            Assert.Null(result.ViewName);
+            itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
+            Assert.Contains("Item Retailer is required", itemModel.Errors.Select(error => error.ErrorMessage));
+        }
+
+        [Fact]
+        public async Task GivenAnUnknownRetailer_ErrorsContainsCorrectMessage()
+        {
+            var itemModel = new ItemModel{ Retailer = "Bobs business"};
+            var repository = new ItemRepositoryWithNoItems();
+
+            var itemController = _builder.WithItemRepository(repository).Build();
+            var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
+            var viewModel = result.Model as ItemModel;
+
+            Assert.Null(result.ViewName);
+            itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
+            Assert.Contains("Please specify a known retailer", itemModel.Errors.Select(error => error.ErrorMessage));
         }
 
         [Fact]
