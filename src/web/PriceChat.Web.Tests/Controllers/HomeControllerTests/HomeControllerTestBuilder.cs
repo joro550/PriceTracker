@@ -9,7 +9,7 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
     {
         private IItemRepository _itemRepository;
         private IItemPriceRepository _itemPriceRepository;
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public HomeControllerTestBuilder()
         {
@@ -29,12 +29,6 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
         public HomeControllerTestBuilder WithItemPriceRepository(IItemPriceRepository itemPriceRepository)
         {
             _itemPriceRepository = itemPriceRepository;
-            return this;
-        }
-
-        public HomeControllerTestBuilder WithMapper(IMapper mapper)
-        {
-            _mapper = mapper;
             return this;
         }
 

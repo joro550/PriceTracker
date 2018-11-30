@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using Microsoft.AspNetCore.Mvc;
+using PriceChat.Web.Models.Items;
+using Xunit;
 
 namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
 {
@@ -13,8 +15,11 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
         public void WhenAddIsCalled_AddViewIsReturned()
         {
             var itemController = _builder.Build();
-            var result = itemController.Add();
+            var result = Assert.IsType<ViewResult>(itemController.Add());
             Assert.NotNull(result);
+                
+            var viewModel = result.Model as ItemModel;
+            Assert.NotNull(viewModel);
         }
     }
 }

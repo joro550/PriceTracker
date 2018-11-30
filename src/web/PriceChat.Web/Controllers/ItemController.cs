@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PriceChat.Web.Data;
@@ -20,7 +19,7 @@ namespace PriceChat.Web.Controllers
 
         [HttpGet]
         public ActionResult Add()
-            => View();
+            => View(new ItemModel());
 
         [HttpPost]
         [ValidateAntiForgeryToken]

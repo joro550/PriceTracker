@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PriceChat.Web.Models.Items
 {
@@ -16,6 +18,11 @@ namespace PriceChat.Web.Models.Items
 
         [Required]
         public string Retailer { get; set; }
+
+        public List<SelectListItem> RetailerList => new List<SelectListItem>
+        {
+            new SelectListItem {Value = "Amazon", Text = "Amazon"}
+        };
     }
 
     public class ItemModelValidator : AbstractValidator<ItemModel>

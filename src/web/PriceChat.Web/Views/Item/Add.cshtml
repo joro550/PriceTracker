@@ -22,7 +22,7 @@
             <div class='form-group'>
                 <label class='col-sm-2 control-label' asp-for='Retailer'>Retailer</label>
                 <div class='col-sm-5'>
-                    <input class='form-control' asp-for='Retailer'>
+                    <select class='form-control' asp-for='Retailer' asp-items='Model.RetailerList'></select>
                 </div>
             </div>
             <div class='form-group'>
