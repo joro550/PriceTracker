@@ -32,6 +32,7 @@ namespace PriceFinder.Tests
         [InlineData("B0725VRJ6J", "£47.99", "ItemOnSale")]
         [InlineData("B005KK88CM", "£173.00", "AmazonOnSale")]
         [InlineData("B01C45OD6K", "£39.99", "DvdPage")]
+        [InlineData("B07HWX2M9H", "£1368.28", "ItemWithCommasInPrice")]
         public async Task GivenAnItemId_ThenCorrectPriceIsEnteredIntoTheDatabase(string id, string expectedPrice, string typeOfItem)
         {
             var queueItem = new QueueItem {Id = id };
@@ -40,7 +41,8 @@ namespace PriceFinder.Tests
             GetAmazonPriceFunction.Client = new HttpClient(new FileLoaderMessageHandler(typeOfItem, "Amazon"));
             await GetAmazonPriceFunction.Run(message, _tableReference);
 
-            var query = new TableQuery<ItemPrice>().Where($"PartitionKey eq '{id}'");
+            var query = new TableQuery<ItemPrice>()
+                .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, id));
             var result = await _tableReference.ExecuteQuerySegmentedAsync(query, null);
             var itemPrice = result.Results.First();
 

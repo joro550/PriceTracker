@@ -35,7 +35,7 @@ namespace PriceFinder
             {
                 PartitionKey = queueItem.Id,
                 RowKey = $"{Guid.NewGuid():N}",
-                Price = dealPriceElement?.InnerHtml
+                Price = dealPriceElement?.InnerHtml.Replace(",", string.Empty)
             }));
         }
 
