@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
-using PriceChat.Web.Data;
+using PriceChat.Web.Models.Home;
 using PriceChat.Web.Tests.Fakes;
 using Xunit;
+using ItemPrice = PriceChat.Web.Data.ItemPrice;
 
 namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
 {
@@ -33,11 +34,12 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
                 Assert.NotNull(viewResult);
                 Assert.Null(viewResult.ViewName);
 
-                var viewModel = viewResult.Model as List<Models.Home.ItemPrice>;
+                var viewModel = viewResult.Model as ItemModel;
                 Assert.NotNull(viewModel);
-                Assert.Single(viewModel);
-                Assert.Equal(itemPrice.PartitionKey, viewModel[0].PartitionKey);
-                Assert.Equal(itemPrice.Price, viewModel[0].Price);
+                Assert.Equal(itemPrice.PartitionKey, viewModel.Id);
+                Assert.Single(viewModel.Prices);
+                Assert.Equal(itemPrice.PartitionKey, viewModel.Prices[0].PartitionKey);
+                Assert.Equal(itemPrice.Price, viewModel.Prices[0].Price);
             }
         }
 
@@ -59,9 +61,9 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
                 Assert.NotNull(viewResult);
                 Assert.Null(viewResult.ViewName);
                 
-                var viewModel = viewResult.Model as List<Models.Home.ItemPrice>;
+                var viewModel = viewResult.Model as ItemModel;
                 Assert.NotNull(viewModel);
-                Assert.Empty(viewModel);
+                Assert.Empty(viewModel.Prices);
             }
         }
     }

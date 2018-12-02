@@ -1,50 +1,49 @@
 ﻿@model PriceChat.Web.Models.Items.ItemModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Add Item";
 }
 
-<div class='row'>
-    <div class='col-md-12'>
-        <h2>Add Item</h2>
-        
-        @if (Model.Errors.Any())
-        {
-            <div class='alert alert-danger'>
-                Some errors were found:
-                <ul>
-                    @foreach (var error in Model.Errors)
-                    {
-                        <li>@error.ErrorMessage</li>
-                    }
-                </ul>
-            </div>
-        }
-
-
-        <form class='form-horizontal' asp-action='Add' asp-controller='Item' method='post' asp-antiforgery='true'>
-            <div class='form-group'>
-                <label class='col-sm-2 control-label' asp-for='Id'>Id</label>
-                <div class='col-sm-5'>
-                    <input class='form-control' asp-for='Id'>
-                </div>
-            </div>
-            <div class='form-group'>
-                <label class='col-sm-2 control-label' asp-for='Category'>Category</label>
-                <div class='col-sm-5'>
-                    <input class='form-control' asp-for='Category'>
-                </div>
-            </div>
-            <div class='form-group'>
-                <label class='col-sm-2 control-label' asp-for='Retailer'>Retailer</label>
-                <div class='col-sm-5'>
-                    <select class='form-control' asp-for='Retailer' asp-items='Model.RetailerList'></select>
-                </div>
-            </div>
-            <div class='form-group'>
-                <div class='col-sm-offset-2 col-sm-10'>
-                    <button type='submit' class='btn btn-default'>Submit</button>
-                </div>
-            </div>
-        </form>
-    </div>
+<div class='d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom'>
+    <h1 class='h2'>Item</h1>
+    
 </div>
+@if (Model.Errors.Any())
+{
+    <div class='alert alert-danger'>
+        Some errors were found:
+        <ul>
+            @foreach (var error in Model.Errors)
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+<form asp-action='Add' asp-controller='Item' method='post' asp-antiforgery='true'>
+    <div class='form-group row'>
+        <label asp-for='Id' class='col-sm-2 col-form-label'>Id</label>
+        <div class='col-sm-10'>
+            <input class='form-control' asp-for='Id'>
+        </div>
+    </div>
+    <div class='form-group row'>
+        <label asp-for='Category' class='col-sm-2 col-form-label'>Category</label>
+        <div class='col-sm-10'>
+            <input class='form-control' asp-for='Category'>
+        </div>
+    </div>
+
+
+    <div class='form-group row'>
+        <label asp-for='Retailer' class='col-sm-2 col-form-label'>Retailer</label>
+        <div class='col-sm-10'>
+            <select class='form-control' asp-for='Retailer' asp-items='Model.RetailerList'></select>
+        </div>
+    </div>
+
+    <div class='form-group row'>
+        <div class='col-sm-10'>
+            <button type='submit' class='btn btn-primary'>Submit</button>
+        </div>
+    </div>
+</form>

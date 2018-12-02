@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using PriceChat.Web.Models.Home;
-using PriceChat.Web.Models.Items;
+using ItemModel = PriceChat.Web.Models.Items.ItemModel;
 
 namespace PriceChat.Web
 {

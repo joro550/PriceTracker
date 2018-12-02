@@ -33,9 +33,9 @@ namespace PriceChat.Web.Models.Items
 
         public ItemModelValidator()
         {
-            RuleFor(x => x.Id).NotNull().NotEmpty().WithMessage("Item Id is required");
-            RuleFor(x => x.Category).NotNull().NotEmpty().WithMessage("Item Category is required");
-            RuleFor(x => x.Retailer).NotNull().NotEmpty().WithMessage("Item Retailer is required");
+            RuleFor(x => x.Id).NotEmpty().WithMessage("Item Id is required");
+            RuleFor(x => x.Category).NotEmpty().WithMessage("Item Category is required");
+            RuleFor(x => x.Retailer).NotEmpty().WithMessage("Item Retailer is required");
             RuleFor(x => x.Retailer).Must(BeAKnownRetailer).WithMessage("Please specify a known retailer");
         }
 
