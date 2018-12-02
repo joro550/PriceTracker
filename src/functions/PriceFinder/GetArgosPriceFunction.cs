@@ -44,7 +44,8 @@ namespace PriceFinder
             {
                 PartitionKey = queueItem.Id,
                 RowKey = $"{Guid.NewGuid():N}",
-                Price = attributeValue
+                Price = attributeValue,
+                PriceTime = DateTime.UtcNow
             }));
         }
     }

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace PriceFinder.Models
@@ -5,5 +6,6 @@ namespace PriceFinder.Models
     public class ItemPrice : TableEntity
     {
         public string Price { get; set; }
+        public DateTime PriceTime { get; set; }
     }
 }
