@@ -27,8 +27,9 @@
                     @foreach (var dataSet in Model.DataSets)
                     {
                         var data = JsonConvert.SerializeObject(dataSet.Data);
-                        @:{ "label": "@dataSet.Label", "data": @Html.Raw(data), "fill": false, "borderColor": getRandomColor(), "fillColor": getRandomColor() },
+                        @:{ "label": "@dataSet.Label", "data": @Html.Raw(data), "fill": false, "borderColor": getRandomColor(), "fillColor": getRandomColor(), lineTension: 0 },
                     }
+
                 ]
             },
             options: {
@@ -36,7 +37,7 @@
                     yAxes: [
                         {
                             ticks: {
-                                beginAtZero: true
+                                beginAtZero: false
                             }
                         }
                     ]

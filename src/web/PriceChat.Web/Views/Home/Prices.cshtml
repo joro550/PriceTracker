@@ -5,8 +5,10 @@
 }
 
 @{
-    var date = JsonConvert.SerializeObject(Model.Select(m => m.Timestamp.ToString("yyyy-m-d")));
-    var prices = JsonConvert.SerializeObject(Model.Select(m => m.Price.Remove(0, 1)));
+    var dateOrderedPrices = Model.OrderBy(x => x.PriceDate).ToList();
+
+    var date = JsonConvert.SerializeObject(dateOrderedPrices.Select(m => m.PriceDate.ToString("yyyy-m-d")));
+    var prices = JsonConvert.SerializeObject(dateOrderedPrices.Select(m => m.Price.Remove(0, 1)));
 }
 
 <canvas id='myChart' width='400' height='200'></canvas>
@@ -21,6 +23,7 @@
                 data: @Html.Raw(prices),
                 "fill": false,
                 "borderColor": "rgb(75, 192, 192)",
+                lineTension: 0
             }]
         },
         options: {
