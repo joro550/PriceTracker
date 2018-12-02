@@ -5,8 +5,9 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PriceChat.Web.Data;
 using PriceChat.Web.Models;
-using Item = PriceChat.Web.Models.Item;
-using ItemPrice = PriceChat.Web.Models.ItemPrice;
+using PriceChat.Web.Models.Home;
+using Item = PriceChat.Web.Models.Home.Item;
+using ItemPrice = PriceChat.Web.Models.Home.ItemPrice;
 
 namespace PriceChat.Web.Controllers
 {

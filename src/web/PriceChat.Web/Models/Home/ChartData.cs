@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace PriceChat.Web.Models
+namespace PriceChat.Web.Models.Home
 {
     public class ChartData
     {

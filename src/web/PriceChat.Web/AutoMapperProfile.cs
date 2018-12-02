@@ -1,5 +1,5 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using PriceChat.Web.Models.Home;
 using PriceChat.Web.Models.Items;
 
 namespace PriceChat.Web
@@ -8,8 +8,8 @@ namespace PriceChat.Web
     {
         public AutoMapperProfile()
         {
-            CreateMap<Data.Item, Models.Item>();
-            CreateMap<Data.ItemPrice, Models.ItemPrice>();
+            CreateMap<Data.Item, Item>();
+            CreateMap<Data.ItemPrice, ItemPrice>();
 
             CreateMap<ItemModel, Data.Item>()
                 .ForMember(model => model.RowKey, opts => opts.MapFrom(src => src.Id));

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PriceChat.Web.Models
+namespace PriceChat.Web.Models.Home
 {
     public class ItemPrice
     {

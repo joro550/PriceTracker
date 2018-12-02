@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PriceChat.Web.Models;
+using PriceChat.Web.Models.Home;
 using PriceChat.Web.Tests.Fakes;
 using Xunit;
 

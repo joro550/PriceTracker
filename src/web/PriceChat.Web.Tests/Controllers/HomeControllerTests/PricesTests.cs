@@ -33,7 +33,7 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
                 Assert.NotNull(viewResult);
                 Assert.Null(viewResult.ViewName);
 
-                var viewModel = viewResult.Model as List<Models.ItemPrice>;
+                var viewModel = viewResult.Model as List<Models.Home.ItemPrice>;
                 Assert.NotNull(viewModel);
                 Assert.Single(viewModel);
                 Assert.Equal(itemPrice.PartitionKey, viewModel[0].PartitionKey);
@@ -59,7 +59,7 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
                 Assert.NotNull(viewResult);
                 Assert.Null(viewResult.ViewName);
                 
-                var viewModel = viewResult.Model as List<Models.ItemPrice>;
+                var viewModel = viewResult.Model as List<Models.Home.ItemPrice>;
                 Assert.NotNull(viewModel);
                 Assert.Empty(viewModel);
             }

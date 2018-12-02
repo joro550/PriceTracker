@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using PriceChat.Web.Models;
+using PriceChat.Web.Models.Home;
 using PriceChat.Web.Tests.Fakes;
 using Xunit;
 using ItemPrice = PriceChat.Web.Data.ItemPrice;
