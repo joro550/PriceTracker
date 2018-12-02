@@ -8,7 +8,7 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
     public class ItemControllerBuilder
     {
         private IItemRepository _itemRepository;
-        private IMapper _mapper;
+        private readonly IMapper _mapper;
 
         public ItemControllerBuilder()
         {
