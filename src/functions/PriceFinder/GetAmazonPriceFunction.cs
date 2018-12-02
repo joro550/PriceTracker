@@ -17,7 +17,7 @@ namespace PriceFinder
     {
         public static HttpClient Client { get; set; } = new HttpClient();
         private static readonly List<string> HtmlIdsToCheck = new List<string> { "priceblock_dealprice", "priceblock_ourprice" };
-        private static readonly List<string> HtmlClassesToCheck = new List<string> {"offer-price"};
+        private static readonly List<string> HtmlClassesToCheck = new List<string> {"offer-price", "a-color-price" };
 
         [FunctionName("GetPrice")]
         public static async Task Run(

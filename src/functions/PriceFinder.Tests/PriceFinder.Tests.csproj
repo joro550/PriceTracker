@@ -11,6 +11,7 @@
     <None Remove="Pages\Amazon\DvdPage.html" />
     <None Remove="Pages\Amazon\ItemOnSale.html" />
     <None Remove="Pages\Amazon\ItemWithCommasInPrice.html" />
+    <None Remove="Pages\Amazon\MarketPlaceItem.html" />
     <None Remove="Pages\Argos\Item.html" />
   </ItemGroup>
 
@@ -19,6 +20,7 @@
     <EmbeddedResource Include="Pages\Amazon\DvdPage.html" />
     <EmbeddedResource Include="Pages\Amazon\ItemOnSale.html" />
     <EmbeddedResource Include="Pages\Amazon\ItemWithCommasInPrice.html" />
+    <EmbeddedResource Include="Pages\Amazon\MarketPlaceItem.html" />
     <EmbeddedResource Include="Pages\Argos\Item.html" />
   </ItemGroup>
 
