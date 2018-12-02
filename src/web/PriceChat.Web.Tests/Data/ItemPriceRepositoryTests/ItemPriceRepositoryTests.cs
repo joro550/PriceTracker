@@ -75,7 +75,8 @@ namespace PriceChat.Web.Tests.Data.ItemPriceRepositoryTests
         private static ItemPrice CreateItemPrice(string partitionKey) => new ItemPrice
         {
             PartitionKey = partitionKey,
-            RowKey = $"{Guid.NewGuid():N}"
+            RowKey = $"{Guid.NewGuid():N}",
+            PriceDate = DateTime.UtcNow
         };
     }
 }
