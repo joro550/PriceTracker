@@ -1,23 +1,24 @@
 ﻿@model PriceChat.Web.Models.Items.ItemModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Add Item";
 }
 
 <div class='d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom'>
     <h1 class='h2'>Item</h1>
-    @if (Model.Errors.Any())
-    {
-        <div class='alert alert-danger'>
-            Some errors were found:
-            <ul>
-                @foreach (var error in Model.Errors)
-                {
-                    <li>@error.ErrorMessage</li>
-                }
-            </ul>
-        </div>
-    }
+    
 </div>
+@if (Model.Errors.Any())
+{
+    <div class='alert alert-danger'>
+        Some errors were found:
+        <ul>
+            @foreach (var error in Model.Errors)
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
 <form asp-action='Add' asp-controller='Item' method='post' asp-antiforgery='true'>
     <div class='form-group row'>
         <label asp-for='Id' class='col-sm-2 col-form-label'>Id</label>

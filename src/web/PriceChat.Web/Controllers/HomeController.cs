@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PriceChat.Web.Data;
-using PriceChat.Web.Models;
 using PriceChat.Web.Models.Home;
 using Item = PriceChat.Web.Models.Home.Item;
 using ItemPrice = PriceChat.Web.Models.Home.ItemPrice;
@@ -34,8 +33,12 @@ namespace PriceChat.Web.Controllers
         public async Task<IActionResult> Prices(string itemId)
         {
             var prices = await _itemPriceRepository.ByPartitionKey(itemId);
-            var viewModel = _mapper.Map<List<ItemPrice>>(prices);
-            return View(viewModel);
+
+            return View(new ItemModel
+            {
+                Id = itemId,
+                Prices = _mapper.Map<List<ItemPrice>>(prices)
+            });
         }
 
         public async Task<IActionResult> AllPrices()
