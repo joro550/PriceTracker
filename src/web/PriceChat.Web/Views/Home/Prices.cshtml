@@ -4,39 +4,7 @@
     ViewData["Title"] = $"Price of {Model.Id}";
 }
 
-@{
-    var dateOrderedPrices = Model.Prices.OrderBy(x => x.PriceDate).ToList();
-
-    var date = JsonConvert.SerializeObject(dateOrderedPrices.Select(m => m.PriceDate.ToString("yyyy-m-d")));
-    var prices = JsonConvert.SerializeObject(dateOrderedPrices.Select(m => m.Price.Remove(0, 1)));
-}
-
 <div class='d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3'>
     <h1 class='h2'>Prices for Item - @Model.Id</h1>
 </div>
-<canvas id='myChart' width='400' height='200'></canvas>
-<script>
-    var ctx = document.getElementById("myChart");
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: @Html.Raw(date),
-            datasets: [{
-                label: 'Prices',
-                data: @Html.Raw(prices),
-                "fill": false,
-                "borderColor": "rgb(75, 192, 192)",
-                lineTension: 0
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
-    });
-</script>
+<partial name='PriceChart' model='Model.Prices'/>

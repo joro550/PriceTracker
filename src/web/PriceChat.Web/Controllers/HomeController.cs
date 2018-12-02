@@ -37,7 +37,7 @@ namespace PriceChat.Web.Controllers
             return View(new ItemModel
             {
                 Id = itemId,
-                Prices = _mapper.Map<List<ItemPrice>>(prices)
+                Prices = ChartData.FromItemPrices(prices)
             });
         }
 
