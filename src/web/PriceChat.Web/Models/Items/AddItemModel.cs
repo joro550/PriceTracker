@@ -22,7 +22,8 @@ namespace PriceChat.Web.Models.Items
 
         public List<SelectListItem> RetailerList => new List<SelectListItem>
         {
-            new SelectListItem {Value = "Amazon", Text = "Amazon"}
+            new SelectListItem {Value = "Amazon", Text = "Amazon"},
+            new SelectListItem {Value = "Argos", Text = "Argos"}
         };
     }
 }

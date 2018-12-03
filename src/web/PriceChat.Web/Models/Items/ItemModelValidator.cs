@@ -5,7 +5,7 @@ namespace PriceChat.Web.Models.Items
 {
     public class ItemModelValidator : AbstractValidator<AddItemModel>
     {
-        private readonly List<string> _knownRetailers = new List<string> {"Amazon"};
+        private readonly List<string> _knownRetailers = new List<string> {"Amazon", "Argos"};
 
         public ItemModelValidator()
         {
