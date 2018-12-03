@@ -18,12 +18,12 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
         [Fact]
         public async Task GivenAnInvalidItemModel_ViewIsReturnedWithErrorsAndItemIsNotSaved()
         {
-            var itemModel = new ItemModel();
+            var itemModel = new AddItemModel();
             var repository = new ItemRepositoryWithNoItems();
 
             var itemController = _builder.WithItemRepository(repository).Build();
             var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
-            var viewModel = result.Model as ItemModel;
+            var viewModel = result.Model as AddItemModel;
 
             Assert.Null(result.ViewName);
             itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
@@ -33,12 +33,12 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
         [Fact]
         public async Task GivenAnInvalidItemId_ErrorsContainsCorrectMessage()
         {
-            var itemModel = new ItemModel();
+            var itemModel = new AddItemModel();
             var repository = new ItemRepositoryWithNoItems();
 
             var itemController = _builder.WithItemRepository(repository).Build();
             var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
-            var viewModel = result.Model as ItemModel;
+            var viewModel = result.Model as AddItemModel;
 
             Assert.Null(result.ViewName);
             itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
@@ -48,12 +48,12 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
         [Fact]
         public async Task GivenAnInvalidItemCategory_ErrorsContainsCorrectMessage()
         {
-            var itemModel = new ItemModel();
+            var itemModel = new AddItemModel();
             var repository = new ItemRepositoryWithNoItems();
 
             var itemController = _builder.WithItemRepository(repository).Build();
             var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
-            var viewModel = result.Model as ItemModel;
+            var viewModel = result.Model as AddItemModel;
 
             Assert.Null(result.ViewName);
             itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
@@ -63,12 +63,12 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
         [Fact]
         public async Task GivenAnInvalidItemRetailer_ErrorsContainsCorrectMessage()
         {
-            var itemModel = new ItemModel();
+            var itemModel = new AddItemModel();
             var repository = new ItemRepositoryWithNoItems();
 
             var itemController = _builder.WithItemRepository(repository).Build();
             var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
-            var viewModel = result.Model as ItemModel;
+            var viewModel = result.Model as AddItemModel;
 
             Assert.Null(result.ViewName);
             itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
@@ -78,12 +78,12 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
         [Fact]
         public async Task GivenAnUnknownRetailer_ErrorsContainsCorrectMessage()
         {
-            var itemModel = new ItemModel{ Retailer = "Bobs business"};
+            var itemModel = new AddItemModel{ Retailer = "Bobs business"};
             var repository = new ItemRepositoryWithNoItems();
 
             var itemController = _builder.WithItemRepository(repository).Build();
             var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
-            var viewModel = result.Model as ItemModel;
+            var viewModel = result.Model as AddItemModel;
 
             Assert.Null(result.ViewName);
             itemModel.Should().BeEquivalentTo(viewModel, m => m.Excluding(e => e.Errors));
@@ -93,7 +93,7 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
         [Fact]
         public async Task GivenAValidItemModel_ItemIsAddedViaTheRepository()
         {
-            var itemModel = new ItemModel {Id = "007", Category = "Gaming", Retailer = "Amazon"};
+            var itemModel = new AddItemModel {Id = "007", Category = "Gaming", Retailer = "Amazon"};
             var repository = new ItemRepositoryWithNoItems();
 
             var itemController = _builder.WithItemRepository(repository).Build();

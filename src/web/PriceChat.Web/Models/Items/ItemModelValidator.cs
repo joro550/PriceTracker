@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace PriceChat.Web.Models.Items
 {
-    public class ItemModelValidator : AbstractValidator<ItemModel>
+    public class ItemModelValidator : AbstractValidator<AddItemModel>
     {
         private readonly List<string> _knownRetailers = new List<string> {"Amazon"};
 

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PriceChat.Web.Models.Items
 {
-    public class ItemModel
+    public class AddItemModel
     {
         public string PartitionKey => "Product";
 

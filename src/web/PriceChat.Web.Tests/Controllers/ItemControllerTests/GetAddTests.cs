@@ -18,7 +18,7 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
             var result = Assert.IsType<ViewResult>(itemController.Add());
             Assert.NotNull(result);
                 
-            var viewModel = result.Model as ItemModel;
+            var viewModel = result.Model as AddItemModel;
             Assert.NotNull(viewModel);
         }
     }

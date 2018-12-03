@@ -19,22 +19,22 @@ namespace PriceChat.Web.Controllers
 
         [HttpGet]
         public ActionResult Add()
-            => View(new ItemModel());
+            => View(new AddItemModel());
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(ItemModel itemModel)
+        public async Task<ActionResult> Add(AddItemModel addItemModel)
         {
             var validator = new ItemModelValidator();
-            var validationResult = validator.Validate(itemModel);
+            var validationResult = validator.Validate(addItemModel);
 
             if (!validationResult.IsValid)
             {
-                itemModel.Errors = validationResult.Errors;
-                return View(itemModel);
+                addItemModel.Errors = validationResult.Errors;
+                return View(addItemModel);
             }
 
-            await _repository.Add(_mapper.Map<ItemEntity>(itemModel));
+            await _repository.Add(_mapper.Map<ItemEntity>(addItemModel));
             return View();
         }
     }
