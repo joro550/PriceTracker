@@ -6,6 +6,6 @@ namespace PriceFinder.Models
     public class ItemPrice : TableEntity
     {
         public string Price { get; set; }
-        public DateTime PriceTime { get; set; }
+        public DateTime PriceDate { get; set; }
     }
 }

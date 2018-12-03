@@ -36,7 +36,7 @@ namespace PriceFinder
                 PartitionKey = queueItem.Id,
                 RowKey = $"{Guid.NewGuid():N}",
                 Price = dealPriceElement?.InnerHtml.Replace(",", string.Empty),
-                PriceTime = DateTime.UtcNow
+                PriceDate = DateTime.UtcNow
             }));
         }
 

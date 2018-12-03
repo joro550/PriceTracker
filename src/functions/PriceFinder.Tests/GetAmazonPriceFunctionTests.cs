@@ -49,7 +49,7 @@ namespace PriceFinder.Tests
 
             Assert.NotNull(itemPrice);
             Assert.Equal(expectedPrice, itemPrice.Price);
-            Assert.Equal(DateTime.UtcNow, itemPrice.PriceTime, TimeSpan.FromSeconds(2));
+            Assert.Equal(DateTime.UtcNow, itemPrice.PriceDate, TimeSpan.FromSeconds(2));
         }
 
         [Theory]
