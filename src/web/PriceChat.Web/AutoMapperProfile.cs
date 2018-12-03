@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using PriceChat.Web.Data;
 using PriceChat.Web.Models.Home;
+using PriceChat.Web.Models.Items;
 
 namespace PriceChat.Web
 {
@@ -9,7 +10,7 @@ namespace PriceChat.Web
         public AutoMapperProfile()
         {
             CreateMap<ItemEntity, Item>();
-            CreateMap<ItemModel, ItemEntity>()
+            CreateMap<AddItemModel,ItemEntity>()
                 .ForMember(model => model.RowKey, opts => opts.MapFrom(src => src.Id));
         }
     }
