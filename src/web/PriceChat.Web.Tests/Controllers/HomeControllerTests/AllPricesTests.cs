@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
-using PriceChat.Web.Models.Home;
+using PriceChat.Web.Data;
+using PriceChat.Web.Models;
 using PriceChat.Web.Tests.Fakes;
 using Xunit;
-using ItemPrice = PriceChat.Web.Data.ItemPrice;
 
 namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
 {
@@ -48,11 +48,11 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
             [Fact]
             public async Task WhenGettingAllPrices_ChartDataHasBeenFilled()
             {
-                var items = new List<ItemPrice>
+                var items = new List<ItemPriceEntity>
                 {
-                    new ItemPrice
+                    new ItemPriceEntity
                         {Timestamp = new DateTime(2018, 9, 19), PartitionKey = "007", Price = "£3.00"},
-                    new ItemPrice
+                    new ItemPriceEntity
                         {Timestamp = new DateTime(2018, 9, 20), PartitionKey = "007", Price = "£4.00"},
                 };
 
@@ -73,15 +73,15 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
             [Fact]
             public async Task WhenPriceIsNull_ThenChartDataHasNoValueForThatDay()
             {
-                var items = new List<ItemPrice>
+                var items = new List<ItemPriceEntity>
                 {
-                    new ItemPrice
+                    new ItemPriceEntity
                     {
                         Price = null,
                         PartitionKey = "007",
                         Timestamp = new DateTime(2018, 9, 19)
                     },
-                    new ItemPrice
+                    new ItemPriceEntity
                     {
                         Price = "£4.00",
                         PartitionKey = "007",
@@ -103,7 +103,7 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
                 viewModel.Should().BeEquivalentTo(CreateChartData(items));
             }
 
-            private static ChartData CreateChartData(IReadOnlyCollection<ItemPrice> prices) 
+            private static ChartData CreateChartData(IReadOnlyCollection<ItemPriceEntity> prices) 
                 => ChartData.FromItemPrices(prices);
         }
     }

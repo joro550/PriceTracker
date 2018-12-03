@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace PriceChat.Web.Models.Home
+namespace PriceChat.Web.Models
 {
     public class ChartData
     {
         public List<string> Labels { get; private set; } = new List<string>();
         public List<ChatDataSets> DataSets { get; } = new List<ChatDataSets>();
 
-        public static ChartData FromItemPrices(IReadOnlyCollection<Data.ItemPrice> prices)
+        public static ChartData FromItemPrices(IReadOnlyCollection<Data.ItemPriceEntity> prices)
         {
             var chartData = new ChartData
             {

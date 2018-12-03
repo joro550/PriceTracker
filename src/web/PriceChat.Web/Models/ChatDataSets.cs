@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PriceChat.Web.Models.Home
+namespace PriceChat.Web.Models
 {
     public class ChatDataSets
     {

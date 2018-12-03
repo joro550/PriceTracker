@@ -6,12 +6,12 @@ namespace PriceChat.Web.Data
 {
     public interface IItemRepository
     {
-        Task<List<Item>> GetAll();
-        Task<List<Item>> ByPartitionKey(string value);
-        Task Add(Item item);
+        Task<List<ItemEntity>> GetAll();
+        Task<List<ItemEntity>> ByPartitionKey(string value);
+        Task Add(ItemEntity itemEntity);
     }
 
-    public class ItemRepository : Repository<Item>, IItemRepository
+    public class ItemRepository : Repository<ItemEntity>, IItemRepository
     {
         public ItemRepository(CloudTableClient client) 
             : base(client.GetTableReference("items"))

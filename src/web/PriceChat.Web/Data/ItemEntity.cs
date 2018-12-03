@@ -2,7 +2,7 @@
 
 namespace PriceChat.Web.Data
 {
-    public class Item : TableEntity
+    public class ItemEntity : TableEntity
     {
         public string Id { get; set; }
         public string Category { get; set; }

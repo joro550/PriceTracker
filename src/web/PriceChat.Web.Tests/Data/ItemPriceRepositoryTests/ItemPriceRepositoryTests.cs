@@ -72,7 +72,7 @@ namespace PriceChat.Web.Tests.Data.ItemPriceRepositoryTests
             }
         }
 
-        private static ItemPrice CreateItemPrice(string partitionKey) => new ItemPrice
+        private static ItemPriceEntity CreateItemPrice(string partitionKey) => new ItemPriceEntity
         {
             PartitionKey = partitionKey,
             RowKey = $"{Guid.NewGuid():N}",

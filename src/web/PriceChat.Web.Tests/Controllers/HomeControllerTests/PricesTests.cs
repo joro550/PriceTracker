@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
+using PriceChat.Web.Data;
 using PriceChat.Web.Models.Home;
 using PriceChat.Web.Tests.Fakes;
 using Xunit;
-using ItemPrice = PriceChat.Web.Data.ItemPrice;
 
 namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
 {
@@ -23,9 +23,9 @@ namespace PriceChat.Web.Tests.Controllers.HomeControllerTests
             {
                 var fixture = new Fixture();
                 var itemPrice = fixture
-                    .Create<ItemPrice>();
+                    .Create<ItemPriceEntity>();
 
-                var repository = new ItemPriceRepositoryWithSpecifiedPrices(new List<ItemPrice> {itemPrice});
+                var repository = new ItemPriceRepositoryWithSpecifiedPrices(new List<ItemPriceEntity> {itemPrice});
                 var homeController = _builder
                     .WithItemPriceRepository(repository)
                     .BuildController();

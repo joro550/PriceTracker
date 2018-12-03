@@ -7,9 +7,9 @@ namespace PriceChat.Web.Tests.Fakes
 {
     public class ItemRepositoryWithItems : IItemRepository
     {
-        public static readonly List<Item> Items = new List<Item>
+        public static readonly List<ItemEntity> Items = new List<ItemEntity>
         {
-            new Item
+            new ItemEntity
             {
                 Id = "1",
                 Category = "Category",
@@ -17,13 +17,13 @@ namespace PriceChat.Web.Tests.Fakes
             }
         };
 
-        public Task<List<Item>> GetAll() 
+        public Task<List<ItemEntity>> GetAll() 
             => Task.FromResult(Items);
 
-        public Task<List<Item>> ByPartitionKey(string value)
+        public Task<List<ItemEntity>> ByPartitionKey(string value)
             => Task.FromResult(Items.Where(item => item.PartitionKey == value).ToList());
 
-        public Task Add(Item item) 
-            => Task.Run(() => Items.Add(item));
+        public Task Add(ItemEntity itemEntity) 
+            => Task.Run(() => Items.Add(itemEntity));
     }
 }

@@ -78,7 +78,7 @@ namespace PriceChat.Web.Tests.Data.ItemRepositoryTests
             }
         }
 
-        private static Item CreateItem(string partitionKey) => new Item
+        private static ItemEntity CreateItem(string partitionKey) => new ItemEntity
         {
             Id = "B07",
             RowKey = "B07",

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -25,21 +24,5 @@ namespace PriceChat.Web.Models.Items
         {
             new SelectListItem {Value = "Amazon", Text = "Amazon"}
         };
-    }
-
-    public class ItemModelValidator : AbstractValidator<ItemModel>
-    {
-        private readonly List<string> _knownRetailers = new List<string> {"Amazon"};
-
-        public ItemModelValidator()
-        {
-            RuleFor(x => x.Id).NotEmpty().WithMessage("Item Id is required");
-            RuleFor(x => x.Category).NotEmpty().WithMessage("Item Category is required");
-            RuleFor(x => x.Retailer).NotEmpty().WithMessage("Item Retailer is required");
-            RuleFor(x => x.Retailer).Must(BeAKnownRetailer).WithMessage("Please specify a known retailer");
-        }
-
-        private bool BeAKnownRetailer(string arg) 
-            => _knownRetailers.Contains(arg);
     }
 }

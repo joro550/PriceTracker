@@ -6,13 +6,13 @@ namespace PriceChat.Web.Tests.Fakes
 {
     public class ItemPriceRepositoryWithNoPrices : IItemPriceRepository
     {
-        public Task<List<ItemPrice>> GetAll() 
-            => Task.FromResult(new List<ItemPrice>());
+        public Task<List<ItemPriceEntity>> GetAll() 
+            => Task.FromResult(new List<ItemPriceEntity>());
 
-        public Task<List<ItemPrice>> ByPartitionKey(string value) 
-            => Task.FromResult(new List<ItemPrice>());
+        public Task<List<ItemPriceEntity>> ByPartitionKey(string value) 
+            => Task.FromResult(new List<ItemPriceEntity>());
 
-        public Task Add(ItemPrice item) 
+        public Task Add(ItemPriceEntity item) 
             => Task.CompletedTask;
     }
 }

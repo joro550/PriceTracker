@@ -7,15 +7,15 @@ namespace PriceChat.Web.Tests.Fakes
 {
     public class ItemRepositoryWithNoItems : IItemRepository
     {
-        private List<Item> Items { get; } = new List<Item>();
+        private List<ItemEntity> Items { get; } = new List<ItemEntity>();
 
-        public Task<List<Item>> GetAll() 
+        public Task<List<ItemEntity>> GetAll() 
             => Task.FromResult(Items);
 
-        public Task<List<Item>> ByPartitionKey(string value) 
+        public Task<List<ItemEntity>> ByPartitionKey(string value) 
             => Task.FromResult(Items.Where(item => item.PartitionKey == value).ToList());
 
-        public Task Add(Item item)
-            => Task.Run(() => Items.Add(item));
+        public Task Add(ItemEntity itemEntity)
+            => Task.Run(() => Items.Add(itemEntity));
     }    
 }
