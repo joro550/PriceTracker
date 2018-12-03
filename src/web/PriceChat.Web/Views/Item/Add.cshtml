@@ -5,7 +5,7 @@
 
 <div class='d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom'>
     <h1 class='h2'>Item</h1>
-    
+
 </div>
 @if (Model.Errors.Any())
 {
@@ -17,6 +17,12 @@
                 <li>@error.ErrorMessage</li>
             }
         </ul>
+    </div>
+}
+else if (Model.Success)
+{
+    <div class='alert alert-success'>
+        Item has been added
     </div>
 }
 <form asp-action='Add' asp-controller='Item' method='post' asp-antiforgery='true'>

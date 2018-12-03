@@ -18,6 +18,8 @@ namespace PriceChat.Web.Models.Items
         [Required]
         public string Retailer { get; set; }
 
+        public bool Success { get; set; }
+
         public IList<ValidationFailure> Errors { get; set; } = new List<ValidationFailure>();
 
         public List<SelectListItem> RetailerList => new List<SelectListItem>

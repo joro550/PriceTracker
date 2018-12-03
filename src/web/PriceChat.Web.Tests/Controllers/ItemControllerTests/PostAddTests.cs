@@ -100,6 +100,9 @@ namespace PriceChat.Web.Tests.Controllers.ItemControllerTests
             var result = Assert.IsType<ViewResult>(await itemController.Add(itemModel));
             Assert.Null(result.ViewName);
 
+            var viewModel = Assert.IsType<AddItemModel>(result.Model);
+            Assert.True(viewModel.Success);
+
             var collection = await repository.GetAll();
             Assert.Single(collection);
 

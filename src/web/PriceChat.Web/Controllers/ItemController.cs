@@ -35,7 +35,7 @@ namespace PriceChat.Web.Controllers
             }
 
             await _repository.Add(_mapper.Map<ItemEntity>(addItemModel));
-            return View();
+            return View(new AddItemModel {Success = true});
         }
     }
 }
