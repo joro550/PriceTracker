@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using PriceChat.Web.Data;
+using System.Collections.Generic;
 
 namespace PriceChat.Web.Models
 {
@@ -8,7 +9,7 @@ namespace PriceChat.Web.Models
         public List<string> Labels { get; private set; } = new List<string>();
         public List<ChatDataSets> DataSets { get; } = new List<ChatDataSets>();
 
-        public static ChartData FromItemPrices(IReadOnlyCollection<Data.ItemPriceEntity> prices)
+        public static ChartData FromItemPrices(IReadOnlyCollection<ItemPriceEntity> prices)
         {
             var chartData = new ChartData
             {
