@@ -1,26 +1,44 @@
+using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using ChartJs.Blazor.ChartJS.Common;
 using ChartJs.Blazor.ChartJS.Common.Legends;
 using ChartJs.Blazor.ChartJS.LineChart;
 using ChartJs.Blazor.Charts;
 using Microsoft.AspNetCore.Blazor.Components;
+using Microsoft.JSInterop;
+using Prices.Web.Shared.Models;
 
 namespace Prices.Web.Client.Pages.ItemPrices
 {
     public class PriceChartComponent : BlazorComponent
     {
-        protected LineChartConfig pieChartConfig;
-        protected ChartJsLineChart lineChartJs;
+        protected ChartJsLineChart LineChartJs;
+        protected LineChartConfig ChartConfig { set; get; } = new LineChartConfig();
+        [Inject] protected HttpClient Client { get; set; }
 
-        protected override Task OnInitAsync()
+        protected Random _random = new Random();
+
+        protected override async Task OnInitAsync()
         {
-            pieChartConfig = pieChartConfig ?? new LineChartConfig
+            var chartData = await Client.GetAsync("/api/prices/ChartData");
+            ChartConfig = chartData.IsSuccessStatusCode 
+                ? await BuildChartConfig(chartData) 
+                : new LineChartConfig();
+        }
+
+        private async Task<LineChartConfig> BuildChartConfig(HttpResponseMessage responseMessage)
+        {
+            var contentString = await responseMessage.Content.ReadAsStringAsync();
+            var chartData = Json.Deserialize<ChartData>(contentString);
+
+            var buildChartConfig = new LineChartConfig
             {
                 CanvasId = "myFirstLineChart",
                 Options = new LineChartOptions
                 {
-                    Text = "Sample chart from Blazor",
+                    Text = "Item Prices",
                     Display = true,
                     Responsive = true,
                     Title = new OptionsTitle {Display = true, Text = "Line Chart"},
@@ -45,24 +63,39 @@ namespace Prices.Web.Client.Pages.ItemPrices
                 },
                 Data = new LineChartData
                 {
-                    Labels = new List<string> {"Red", "Blue", "Yellow", "Green", "Purple", "Orange"},
-                    Datasets = new List<LineChartDataset>
-                    {
-                        new LineChartDataset
-                        {
-                            BackgroundColor = "#ff6384",
-                            BorderColor = "#ff6384",
-                            Label = "# of Votes from blazor",
-                            Data = new List<object> {4, 6, 2, 7, 9, 1},
-                            Fill = false,
-                            BorderWidth = 2,
-                            PointRadius = 3,
-                            PointBorderWidth = 1
-                        }
-                    }
+                    Labels = chartData.Labels,
+                    Datasets = new List<LineChartDataset>()
                 }
             };
-            return base.OnInitAsync();
+
+            foreach (var dataSet in chartData.DataSets)
+            {
+                var lineChartDataset = new LineChartDataset
+                {
+                    Label = dataSet.Label, 
+                    BackgroundColor = GetRandomColor(),
+                    BorderColor = GetRandomColor(), 
+                    BorderWidth = 2,
+                    PointRadius = 3,
+                    PointBorderWidth = 1,
+                    Data = new List<object>()
+                };
+                
+                foreach (var datum in dataSet.Data)
+                    lineChartDataset.Data.Add(datum);
+
+                buildChartConfig.Data.Datasets.Add(lineChartDataset);
+            }
+            return  buildChartConfig;
+        }
+
+        private string GetRandomColor()
+        {
+            const string letters = "0123456789ABCDEF";
+            var color = "#";
+            for (var i = 0; i < 6; i++)
+                color += letters[_random.Next(0, letters.Length - 1)];
+            return color;
         }
     }
 }

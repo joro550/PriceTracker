@@ -13,14 +13,10 @@ namespace Prices.Web.Client.Tests.Pages.Items
             Client = client;
         }
 
-        public List<Item> GetItems()
-        {
-            return Items;
-        }
+        public List<Item> GetItems() 
+            => Items;
 
-        public async Task InitAsync()
-        {
-            await OnInitAsync();
-        }
+        public async Task InitAsync() 
+            => await OnInitAsync();
     }
 }

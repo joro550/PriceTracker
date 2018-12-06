@@ -1,8 +1,5 @@
 ﻿@page "/prices/"
 @inherits PriceChartComponent
 
-<h2>Chart JS charts using Blazor</h2>
-<div class='row'>
-    <button class='btn btn-primary'>Update Chart </button>
-</div>
-<ChartJsLineChart ref='lineChartJs' Config='@pieChartConfig' Width='600' Height='300'/>
+<h2>All Item Prices</h2>
+<ChartJsLineChart ref='LineChartJs' Config='@ChartConfig' Width='800' Height='400'/>

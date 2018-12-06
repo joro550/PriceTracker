@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Prices.Web.Shared\Prices.Web.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Prices" />
-  </ItemGroup>
-
 </Project>

@@ -6,6 +6,7 @@ using Prices.Web.Server.Extensions;
 
 namespace Prices.Web.Server.Controllers
 {
+    [Route("/api/prices")]
     public class PriceController : Controller
     {
         private readonly IItemPriceRepository _itemPriceRepository;
@@ -13,6 +14,7 @@ namespace Prices.Web.Server.Controllers
         public PriceController(IItemPriceRepository itemPriceRepository) 
             => _itemPriceRepository = itemPriceRepository;
 
+        [Route("ChartData")]
         public async Task<IActionResult> PriceChartData()
         {
             var prices = await _itemPriceRepository.GetAll();

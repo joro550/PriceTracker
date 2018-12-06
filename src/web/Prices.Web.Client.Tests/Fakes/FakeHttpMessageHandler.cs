@@ -26,26 +26,26 @@ namespace Prices.Web.Client.Tests.Fakes
             return Task.FromResult(_responseMessage);
         }
 
-        public static FakeHttpMessageHandler WithNotFoundResult()
+        public static FakeHttpMessageHandler WithNotFoundResult() => new FakeHttpMessageHandler(new HttpResponseMessage
         {
-            return new FakeHttpMessageHandler(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.NotFound
-            });
-        }
+            StatusCode = HttpStatusCode.NotFound
+        });
+        
+        public static FakeHttpMessageHandler WithNoCotentResult() => new FakeHttpMessageHandler(new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.NotFound
+        });
 
-        public static FakeHttpMessageHandler WithResult<T>(T result)
+
+        public static FakeHttpMessageHandler WithResult<T>(T result) => new FakeHttpMessageHandler(new HttpResponseMessage
         {
-            return new FakeHttpMessageHandler(new HttpResponseMessage
-            {
-                StatusCode = HttpStatusCode.OK,
-                Content = new StringContent(Json.Serialize(result))
-            });
-        }
+            StatusCode = HttpStatusCode.OK,
+            Content = new StringContent(Json.Serialize(result))
+        });
 
         public IEnumerable<string> GetRequests()
         {
-            return _requests.Select(r => r.AbsolutePath);
+            return _requests.Select(r => r.AbsolutePath).ToList();
         }
     }
 
