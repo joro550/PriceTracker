@@ -11,7 +11,7 @@ namespace Prices.Web.Server.Extensions
         {
             var chartData = new ChartData
             {
-                Labels = prices.Select(p => p.PriceDate.ToString("yyyy-M-d")).Distinct().OrderBy(x => x).ToList()
+                Labels = prices.Select(p => p.PriceDate.ToString("yyyy-MM-dd")).Distinct().OrderBy(x => x).ToList()
             };
 
             foreach (var groupedPrice in prices.GroupBy(price => price.PartitionKey))
