@@ -7,6 +7,7 @@ using ChartJs.Blazor.ChartJS.Common.Legends;
 using ChartJs.Blazor.ChartJS.LineChart;
 using ChartJs.Blazor.Charts;
 using Microsoft.AspNetCore.Blazor.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using Prices.Web.Shared.Models;
 
@@ -14,18 +15,23 @@ namespace Prices.Web.Client.Pages.ItemPrices
 {
     public class PriceChartComponent : BlazorComponent
     {
+        private readonly Random _random = new Random();
+
         protected ChartJsLineChart LineChartJs;
         protected LineChartConfig ChartConfig { set; get; } = new LineChartConfig();
+        
         [Inject] protected HttpClient Client { get; set; }
-
-        protected Random _random = new Random();
+        [Inject] protected ILogger<PriceChartComponent> Logger { get; set; }
 
         protected override async Task OnInitAsync()
         {
+            Logger.LogDebug("OnInitAsync");
             var chartData = await Client.GetAsync("/api/prices/ChartData");
             ChartConfig = chartData.IsSuccessStatusCode 
                 ? await BuildChartConfig(chartData) 
                 : new LineChartConfig();
+            
+            LineChartJs.Reload();
         }
 
         private async Task<LineChartConfig> BuildChartConfig(HttpResponseMessage responseMessage)
