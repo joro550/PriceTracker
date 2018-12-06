@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace PriceFinder
@@ -31,31 +32,37 @@ namespace PriceFinder
             var pageContent = await itemResult.Content.ReadAsStringAsync();
             var dealPriceElement = GetPriceElement(await htmlParser.ParseAsync(pageContent));
 
-            await prices.ExecuteAsync(TableOperation.Insert(new ItemPrice
+            if (dealPriceElement == null)
             {
-                PartitionKey = queueItem.Id,
-                RowKey = $"{Guid.NewGuid():N}",
-                Price = dealPriceElement?.InnerHtml.Replace(",", string.Empty),
-                PriceDate = DateTime.UtcNow
-            }));
+                await prices.InsertEntity(ItemPrice.FromQueueItem(queueItem));
+            }
+            else
+            {
+                var itemPrice = IsPrice(dealPriceElement)
+                    ? ItemPrice.FromQueueItem(queueItem, dealPriceElement?.InnerHtml.Replace(",", string.Empty))
+                    : ItemPrice.FromQueueItem(queueItem);
+
+                await prices.InsertEntity(itemPrice);
+            }
         }
+
+        private static bool IsPrice(IElement dealPriceElement) 
+            => Regex.IsMatch(dealPriceElement.InnerHtml, "(£)?\\d{1,3}(?:[.,]\\d{3})*(?:[.,]\\d{2})?");
 
         private static IElement GetPriceElement(IParentNode document)
         {
-            IElement dealPriceElement;
-
             foreach (var htmlId in HtmlIdsToCheck)
             {
-                dealPriceElement = document.QuerySelectorAll($"#{htmlId}").FirstOrDefault();
-                if (dealPriceElement != null)
-                    return dealPriceElement;
+                var idElement = document.QuerySelectorAll($"#{htmlId}").FirstOrDefault();
+                if (idElement != null)
+                    return idElement;
             }
 
             foreach (var htmlClass in HtmlClassesToCheck)
             {
-                dealPriceElement = document.QuerySelectorAll($".{htmlClass}").FirstOrDefault();
-                if (dealPriceElement != null)
-                    return dealPriceElement; ;
+                var classElement = document.QuerySelectorAll($".{htmlClass}").FirstOrDefault();
+                if (classElement != null)
+                    return classElement;
             }
 
             return null;

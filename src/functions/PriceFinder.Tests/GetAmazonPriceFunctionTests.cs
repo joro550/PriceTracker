@@ -34,6 +34,7 @@ namespace PriceFinder.Tests
         [InlineData("B01C45OD6K", "£39.99", "DvdPage")]
         [InlineData("B07HWX2M9H", "£1368.28", "ItemWithCommasInPrice")]
         [InlineData("B07HWX2M9H", "£1569.01", "MarketPlaceItem")]
+        [InlineData("B076G8WCH6", "", "UnavailableItem")]
         public async Task GivenAnItemId_ThenCorrectPriceIsEnteredIntoTheDatabase(string id, string expectedPrice, string typeOfItem)
         {
             var queueItem = new QueueItem {Id = id };
