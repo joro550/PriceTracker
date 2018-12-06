@@ -7,7 +7,6 @@ namespace Prices.Web.Server.Tests.Data.ItemPriceRepositoryTests
     public class ItemPriceRepositoryFixture : IDisposable
     {
         private readonly FakeTableStorageClient _tableClient;
-        public ItemPriceRepository Repository { get; }
 
         public ItemPriceRepositoryFixture()
         {
@@ -17,7 +16,11 @@ namespace Prices.Web.Server.Tests.Data.ItemPriceRepositoryTests
             Repository = new ItemPriceRepository(_tableClient);
         }
 
+        public ItemPriceRepository Repository { get; }
+
         public void Dispose()
-            => _tableClient.DeleteCreatedTables();
+        {
+            _tableClient.DeleteCreatedTables();
+        }
     }
 }

@@ -2,7 +2,9 @@
 {
     public class ItemPriceRepositoryFixtureFactory
     {
-        public ItemPriceRepositoryFixture Build() 
-            => new ItemPriceRepositoryFixture();
+        public ItemPriceRepositoryFixture Build()
+        {
+            return new ItemPriceRepositoryFixture();
+        }
     }
 }

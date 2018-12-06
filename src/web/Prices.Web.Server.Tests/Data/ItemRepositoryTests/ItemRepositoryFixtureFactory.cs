@@ -2,7 +2,9 @@
 {
     public class ItemRepositoryFixtureFactory
     {
-        public ItemRepositoryFixture Build() 
-            => new ItemRepositoryFixture();
+        public ItemRepositoryFixture Build()
+        {
+            return new ItemRepositoryFixture();
+        }
     }
 }

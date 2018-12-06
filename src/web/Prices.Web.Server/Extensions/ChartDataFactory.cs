@@ -16,12 +16,13 @@ namespace Prices.Web.Server.Extensions
 
             foreach (var groupedPrice in prices.GroupBy(price => price.PartitionKey))
             {
-                var dataSet = new ChatDataSets { Label = groupedPrice.Key };
+                var dataSet = new ChatDataSets {Label = groupedPrice.Key};
                 foreach (var itemPrice in groupedPrice.OrderBy(price => price.PriceDate))
                     dataSet.Data.Add(string.IsNullOrWhiteSpace(itemPrice.Price) ? "" : itemPrice.Price.Remove(0, 1));
 
                 chartData.DataSets.Add(dataSet);
             }
+
             return chartData;
         }
     }

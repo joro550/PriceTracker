@@ -1,15 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Prices.Web.Server.Data;
-using Prices.Web.Shared.Models.Items;
+using Prices.Web.Shared.Models.Home;
 
 namespace Prices.Web.Server.Controllers
 {
+    [Route("/api/items")]
     public class ItemController : Controller
     {
-        private readonly IItemRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IItemRepository _repository;
 
         public ItemController(IItemRepository repository, IMapper mapper)
         {
@@ -17,25 +20,29 @@ namespace Prices.Web.Server.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        public ActionResult Add()
-            => Ok(new AddItemModel());
+//        [HttpPost]
+//        public async Task<ActionResult> Add(AddItemModel addItemModel)
+//        {
+//            var validator = new ItemModelValidator();
+//            var validationResult = validator.Validate(addItemModel);
+//
+//            if (!validationResult.IsValid)
+//            {
+//                addItemModel.Errors = validationResult.Errors;
+//                return Ok(addItemModel);
+//            }
+//
+//            await _repository.Add(_mapper.Map<ItemEntity>(addItemModel));
+//            return Ok(new AddItemModel {Success = true});
+//        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Add(AddItemModel addItemModel)
+        [Route("")]
+        public async Task<IActionResult> GetAllItems()
         {
-            var validator = new ItemModelValidator();
-            var validationResult = validator.Validate(addItemModel);
-
-            if (!validationResult.IsValid)
-            {
-                addItemModel.Errors = validationResult.Errors;
-                return Ok(addItemModel);
-            }
-
-            await _repository.Add(_mapper.Map<ItemEntity>(addItemModel));
-            return Ok(new AddItemModel {Success = true});
+            var items = await _repository.GetAll();
+            if (!items.Any())
+                return NotFound();
+            return Ok(_mapper.Map<List<Item>>(items));
         }
     }
 }

@@ -7,8 +7,8 @@ namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
 {
     public class ItemControllerBuilder
     {
-        private IItemRepository _itemRepository;
         private readonly IMapper _mapper;
+        private IItemRepository _itemRepository;
 
         public ItemControllerBuilder()
         {
@@ -25,7 +25,9 @@ namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
             return this;
         }
 
-        public ItemController Build() 
-            => new ItemController(_itemRepository, _mapper);
+        public ItemController Build()
+        {
+            return new ItemController(_itemRepository, _mapper);
+        }
     }
 }

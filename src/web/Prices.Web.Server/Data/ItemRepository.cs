@@ -13,10 +13,9 @@ namespace Prices.Web.Server.Data
 
     public class ItemRepository : Repository<ItemEntity>, IItemRepository
     {
-        public ItemRepository(CloudTableClient client) 
+        public ItemRepository(CloudTableClient client)
             : base(client.GetTableReference("items"))
         {
         }
-
     }
 }

@@ -9,14 +9,17 @@ namespace Prices.Web.Server.Data
     {
         Task<List<T>> GetAll();
         Task<List<T>> ByPartitionKey(string value);
+        Task Add(T item);
     }
 
-    public class Repository<T> : IRepository<T> where T : TableEntity, new ()
+    public class Repository<T> : IRepository<T> where T : TableEntity, new()
     {
         private readonly CloudTable _tableClient;
 
-        protected Repository(CloudTable tableClient) 
-            => _tableClient = tableClient;
+        protected Repository(CloudTable tableClient)
+        {
+            _tableClient = tableClient;
+        }
 
         public async Task<List<T>> GetAll()
         {
@@ -34,7 +37,9 @@ namespace Prices.Web.Server.Data
             return results.Results.OrderBy(result => result.Timestamp).ToList();
         }
 
-        public async Task Add(T item) 
-            => await _tableClient.ExecuteAsync(TableOperation.Insert(item));
+        public async Task Add(T item)
+        {
+            await _tableClient.ExecuteAsync(TableOperation.Insert(item));
+        }
     }
 }

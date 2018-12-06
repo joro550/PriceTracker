@@ -15,7 +15,9 @@ namespace Prices.Web.Shared.Models.Items
             RuleFor(x => x.Retailer).Must(BeAKnownRetailer).WithMessage("Please specify a known retailer");
         }
 
-        private bool BeAKnownRetailer(string arg) 
-            => _knownRetailers.Contains(arg);
+        private bool BeAKnownRetailer(string arg)
+        {
+            return _knownRetailers.Contains(arg);
+        }
     }
 }

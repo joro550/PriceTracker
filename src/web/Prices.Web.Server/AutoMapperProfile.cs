@@ -10,7 +10,7 @@ namespace Prices.Web.Server
         public AutoMapperProfile()
         {
             CreateMap<ItemEntity, Item>();
-            CreateMap<AddItemModel,ItemEntity>()
+            CreateMap<AddItemModel, ItemEntity>()
                 .ForMember(model => model.RowKey, opts => opts.MapFrom(src => src.Id));
         }
     }

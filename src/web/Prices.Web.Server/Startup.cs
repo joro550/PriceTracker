@@ -1,13 +1,13 @@
-using Microsoft.AspNetCore.Blazor.Server;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Net.Mime;
 using AutoMapper;
+using Microsoft.AspNetCore.Blazor.Server;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.WindowsAzure.Storage;
 using Prices.Web.Server.Data;
 
@@ -18,17 +18,20 @@ namespace Prices.Web.Server
         private readonly IConfiguration _configuration;
 
         public Startup(IConfiguration configuration)
-            => _configuration = configuration;
+        {
+            _configuration = configuration;
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1); ;
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            ;
             services.AddResponseCompression(options =>
             {
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
                 {
                     MediaTypeNames.Application.Octet,
-                    WasmMediaTypeNames.Application.Wasm,
+                    WasmMediaTypeNames.Application.Wasm
                 });
             });
 
@@ -47,15 +50,9 @@ namespace Prices.Web.Server
         {
             app.UseResponseCompression();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute("default", "{controller}/{action}/{id?}");
-            });
+            app.UseMvc(routes => { routes.MapRoute("default", "{controller}/{action}/{id?}"); });
 
             app.UseBlazor<Client.Startup>();
         }

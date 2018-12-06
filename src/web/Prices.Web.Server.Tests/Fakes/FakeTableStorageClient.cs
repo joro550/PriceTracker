@@ -30,14 +30,16 @@ namespace Prices.Web.Server.Tests.Fakes
             return tableReference;
         }
 
-        public void DeleteCreatedTables() => Task.Run(async () =>
+        public void DeleteCreatedTables()
         {
-            foreach (var createdTable in _tablesCreated)
+            Task.Run(async () =>
             {
-                var tableReference = _tableClient.GetTableReference(createdTable);
-                await tableReference.DeleteIfExistsAsync();
-
-            }
-        }).Wait();
+                foreach (var createdTable in _tablesCreated)
+                {
+                    var tableReference = _tableClient.GetTableReference(createdTable);
+                    await tableReference.DeleteIfExistsAsync();
+                }
+            }).Wait();
+        }
     }
 }
