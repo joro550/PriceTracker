@@ -31,7 +31,7 @@ namespace Prices.Web.Client.Pages.ItemPrices
                 ? await BuildChartConfig(chartData) 
                 : new LineChartConfig();
             
-            LineChartJs.Reload();
+//            LineChartJs.Reload();
         }
 
         private async Task<LineChartConfig> BuildChartConfig(HttpResponseMessage responseMessage)

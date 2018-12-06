@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ChartJs.Blazor.ChartJS.LineChart;
+using Microsoft.Extensions.Logging;
 using Prices.Web.Client.Pages.ItemPrices;
 using Prices.Web.Client.Tests.Fakes;
 using Prices.Web.Shared.Models;
@@ -74,14 +75,31 @@ namespace Prices.Web.Client.Tests.Pages.ItemPrices
 
     public class PriceChartComponentWrapper : PriceChartComponent
     {
-        public PriceChartComponentWrapper(HttpClient client) 
-            => Client = client;
-        
+        public PriceChartComponentWrapper(HttpClient client, ILogger<PriceChartComponent> logger)
+        {
+            Client = client;
+            Logger = logger;
+        }
+
         public async Task InitAsync() 
             => await OnInitAsync();
 
         public LineChartConfig GetChartConfig() 
             => ChartConfig;
+    }
+
+    public class FakeLogger<T> :ILogger<T>
+    {
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            
+        }
+
+        public bool IsEnabled(LogLevel logLevel) 
+            => true;
+
+        public IDisposable BeginScope<TState>(TState state) 
+            => null;
     }
     
     public class PriceChartComponentBuilder
@@ -104,7 +122,7 @@ namespace Prices.Web.Client.Tests.Pages.ItemPrices
                 BaseAddress = new Uri("http://localhost/")
             };
 
-            return new PriceChartComponentWrapper(client);
+            return new PriceChartComponentWrapper(client, new FakeLogger<PriceChartComponent>());
         }
     }
 }
