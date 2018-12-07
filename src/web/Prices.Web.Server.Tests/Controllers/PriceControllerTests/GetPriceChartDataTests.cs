@@ -132,7 +132,7 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
             Assert.Contains("6.00", model.DataSets[0].Data[2]);
         }
         
-        [Fact(Skip = "Bug that I need to fix later")]
+        [Fact]
         public async Task WhenMultiplePricesExistAndOneDoesNotHavePriceOnDate_ThenChartDataPricesWithBlankAsMissingPrice()
         {
             var prices = new List<ItemPriceEntity>
