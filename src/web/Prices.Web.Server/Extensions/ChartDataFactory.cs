@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Prices.Web.Server.Data;
 using Prices.Web.Shared.Models;
@@ -21,21 +22,20 @@ namespace Prices.Web.Server.Extensions
             };
 
             foreach (var groupedPrice in prices.GroupBy(price => price.PartitionKey))
-            {
-                var dataSet = new ChatDataSets {Label = groupedPrice.Key};
-
-                var priceEntities = groupedPrice.OrderBy(price => price.PriceDate).ToList();
-                foreach (var pricesDate in pricesDates)
+                chartData.DataSets.Add(new ChatDataSets
                 {
-                    var priceEntity = priceEntities.FirstOrDefault(x => x.PriceDate.Date == pricesDate.Date);
-                    dataSet.Data.Add(priceEntity == null ? string.Empty : GetPriceFromRecord(priceEntity));
-                }
-
-                chartData.DataSets.Add(dataSet);
-            }
+                    Label = groupedPrice.Key,
+                    Data = BuildData(groupedPrice.OrderBy(price => price.PriceDate).ToList(), pricesDates)
+                });
 
             return chartData;
         }
+
+        private static List<string> BuildData(IReadOnlyCollection<ItemPriceEntity> itemPrices, 
+            IEnumerable<DateTime> dateTimes) => dateTimes
+            .Select(pricesDate => itemPrices.FirstOrDefault(x => x.PriceDate.Date == pricesDate.Date))
+            .Select(priceEntity => priceEntity == null ? string.Empty : GetPriceFromRecord(priceEntity))
+            .ToList();
 
         private static string GetPriceFromRecord(ItemPriceEntity otherThing) 
             => string.IsNullOrWhiteSpace(otherThing.Price) ? "" : otherThing.Price.Remove(0, 1);
