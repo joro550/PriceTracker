@@ -91,7 +91,30 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
             Assert.Single(model.Labels.Where(l => l == "2018-01-02"));
             Assert.Single(model.Labels.Where(l => l == "2018-01-03"));
         }
-        
+
+        [Fact]
+        public async Task WhenPricesExistWitTimeInformation_ThenChartDataLabelsHaveDistinctData()
+        {
+            var prices = new List<ItemPriceEntity>
+            {
+                new ItemPriceEntity { PriceDate = new DateTime(2018,1,1,12,12,12)},
+                new ItemPriceEntity { PriceDate = new DateTime(2018,1,1,13,13,13)},
+                new ItemPriceEntity { PriceDate = new DateTime(2018,1,3)},
+                new ItemPriceEntity { PriceDate = new DateTime(2018,1,2)},
+                new ItemPriceEntity { PriceDate = new DateTime(2018,1,2)},
+                new ItemPriceEntity { PriceDate = new DateTime(2018,1,3)}
+            };
+
+            var controller = _priceControllerBuilder
+                .WithItemPriceRepository(FakeItemPriceRepository.WithPrices(prices))
+                .Build();
+            var result = Assert.IsType<OkObjectResult>(await controller.PriceChartData());
+            var model = Assert.IsType<ChartData>(result.Value);
+            Assert.Single(model.Labels.Where(l => l == "2018-01-01"));
+            Assert.Single(model.Labels.Where(l => l == "2018-01-02"));
+            Assert.Single(model.Labels.Where(l => l == "2018-01-03"));
+        }
+
         [Fact]
         public async Task WhenPricesExist_ThenChartDataPricesAreLoaded()
         {
@@ -137,13 +160,12 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
         {
             var prices = new List<ItemPriceEntity>
             {
-                new ItemPriceEntity {PartitionKey = "1", PriceDate = new DateTime(2018,1,3), Price = "£1.00"},
-                new ItemPriceEntity {PartitionKey = "1", PriceDate = new DateTime(2018,1,1), Price = "£5.00"},
-                new ItemPriceEntity {PartitionKey = "1", PriceDate = new DateTime(2018,1,5), Price = "£6.00"},
+                new ItemPriceEntity {PartitionKey = "1", PriceDate = new DateTime(2018, 1, 3, 10, 10, 10), Price = "£1.00"},
+                new ItemPriceEntity {PartitionKey = "1", PriceDate = new DateTime(2018, 1, 1), Price = "£5.00"},
+                new ItemPriceEntity {PartitionKey = "1", PriceDate = new DateTime(2018, 1, 5, 12, 12, 12), Price = "£6.00"},
 
-                new ItemPriceEntity {PartitionKey = "2", PriceDate = new DateTime(2018,1,3), Price = "£1.00"},
-                new ItemPriceEntity {PartitionKey = "2", PriceDate = new DateTime(2018,1,5), Price = "£6.00"},
-
+                new ItemPriceEntity {PartitionKey = "2", PriceDate = new DateTime(2018, 1, 3, 11, 11, 11), Price = "£1.00"},
+                new ItemPriceEntity {PartitionKey = "2", PriceDate = new DateTime(2018, 1, 5), Price = "£6.00"},
             };
             
             var controller = _priceControllerBuilder

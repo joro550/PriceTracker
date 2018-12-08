@@ -11,7 +11,7 @@ namespace Prices.Web.Server.Extensions
         public static ChartData FromItemPrices(IReadOnlyCollection<ItemPriceEntity> prices)
         {
             var pricesDates = prices
-                .Select(p => p.PriceDate)
+                .Select(p => p.PriceDate.Date)
                 .Distinct()
                 .OrderBy(x => x)
                 .ToList();
@@ -25,7 +25,7 @@ namespace Prices.Web.Server.Extensions
                 chartData.DataSets.Add(new ChatDataSets
                 {
                     Label = groupedPrice.Key,
-                    Data = BuildData(groupedPrice.OrderBy(price => price.PriceDate).ToList(), pricesDates)
+                    Data = BuildData(groupedPrice.OrderBy(price => price.PriceDate.Date).ToList(), pricesDates)
                 });
 
             return chartData;
