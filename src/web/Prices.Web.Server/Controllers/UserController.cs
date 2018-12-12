@@ -12,13 +12,13 @@ namespace Prices.Web.Server.Controllers
         public UserController(SignInManager<IdentityUser> signInManager) 
             => _signInManager = signInManager;
 
-//        [Route("Login")]
-//        public async Task<IActionResult> Login(UserModel user)
-//        {
-//            var identityUser = new IdentityUser{ UserName = user.Username, PasswordHash = user.Password};
-//            await _signInManager.SignInAsync(identityUser, true);
-//            return Ok();
-//        }
+        [Route("Login")]
+        public async Task<IActionResult> Login(UserModel user)
+        {
+            var identityUser = new IdentityUser{ UserName = user.Username, PasswordHash = user.Password};
+            await _signInManager.SignInAsync(identityUser, true);
+            return Ok();
+        }
 
     }
 

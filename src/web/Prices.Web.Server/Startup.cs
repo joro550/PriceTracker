@@ -1,7 +1,6 @@
+using System;
 using System.Linq;
 using System.Net.Mime;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
@@ -13,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.WindowsAzure.Storage;
 using Prices.Web.Server.Data;
+using Prices.Web.Server.Identity;
 
 namespace Prices.Web.Server
 {
@@ -28,8 +28,18 @@ namespace Prices.Web.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddUserStore<PriceUserStore>();
+
+            services.AddIdentity<PriceWebUser, IdentityRole>()
+                .AddDefaultTokenProviders();
+
+            services.Configure<IdentityOptions>(options => { });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.SlidingExpiration = true;
+            });
+
             services.AddResponseCompression(options =>
             {
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
@@ -43,6 +53,9 @@ namespace Prices.Web.Server
                 CloudStorageAccount.Parse(_configuration.GetConnectionString("StorageConnectionString"));
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
+
+            services.AddTransient<IUserStore<PriceWebUser>, CustomUserStore>();
+            services.AddTransient<IRoleStore<IdentityRole>, CustomRoleStore>();
             services.AddScoped(s => config.CreateMapper());
             services.AddScoped(s => storageAccount.CreateCloudTableClient());
             services.AddScoped<IItemRepository, ItemRepository>();
@@ -53,50 +66,13 @@ namespace Prices.Web.Server
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseResponseCompression();
+            app.UseAuthentication();
 
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+            if (env.IsDevelopment())
+                app.UseDeveloperExceptionPage();
 
-            app.UseMvc(routes => { routes.MapRoute("default", "{controller}/{action}/{id?}"); });
-
+            app.UseMvc();
             app.UseBlazor<Client.Startup>();
         }
-    }
-
-    public class PriceUserStore : IUserStore<IdentityUser>
-    {
-        public void Dispose()
-        {
-            
-        }
-
-        public Task<string> GetUserIdAsync(IdentityUser user, CancellationToken cancellationToken) 
-            => Task.FromResult("userId");
-
-        public Task<string> GetUserNameAsync(IdentityUser user, CancellationToken cancellationToken) 
-            => Task.FromResult("userName");
-
-        public Task SetUserNameAsync(IdentityUser user, string userName, CancellationToken cancellationToken) 
-            => Task.CompletedTask;
-
-        public Task<string> GetNormalizedUserNameAsync(IdentityUser user, CancellationToken cancellationToken) 
-            => Task.FromResult("userName");
-
-        public Task SetNormalizedUserNameAsync(IdentityUser user, string normalizedName, CancellationToken cancellationToken) 
-            => Task.FromResult("userName");
-
-        public Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken) 
-            => Task.FromResult(IdentityResult.Success);
-
-        public Task<IdentityResult> UpdateAsync(IdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(IdentityResult.Success);
-
-        public Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(IdentityResult.Success);
-
-        public Task<IdentityUser> FindByIdAsync(string userId, CancellationToken cancellationToken) 
-            => Task.FromResult(new IdentityUser());
-
-        public Task<IdentityUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken) 
-            => Task.FromResult(new IdentityUser());
     }
 }
