@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Prices.Web.Server.Data;
+using Prices.Web.Server.Data.Entities;
 
 namespace Prices.Web.Server.Tests.Fakes
 {
-    public class FakeItemRepository : BaseRepository<ItemEntity>, IItemRepository
+    public class FakeItemRepository : InMemoryRepository<ItemEntity>, IItemRepository
     {
         public static readonly List<ItemEntity> Items = new List<ItemEntity>
         {

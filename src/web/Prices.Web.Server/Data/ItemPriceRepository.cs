@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
+using Prices.Web.Server.Data.Entities;
 
 namespace Prices.Web.Server.Data
 {

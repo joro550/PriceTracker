@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using Prices.Web.Server.Data;
+using Prices.Web.Server.Data.Entities;
 
 namespace Prices.Web.Server.Tests.Fakes
 {
-    public class FakeItemPriceRepository : BaseRepository<ItemPriceEntity>, IItemPriceRepository
+    public class FakeItemPriceRepository : InMemoryRepository<ItemPriceEntity>, IItemPriceRepository
     {
-        private FakeItemPriceRepository(List<ItemPriceEntity> itemPrices)
-            : base(itemPrices)
+        private FakeItemPriceRepository(List<ItemPriceEntity> itemsPrices)
+            : base(itemsPrices)
         {
         }
 

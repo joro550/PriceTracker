@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Prices.Web.Server.Data;
+using Prices.Web.Server.Data.Entities;
 using Prices.Web.Shared.Models;
 
 namespace Prices.Web.Server.Extensions

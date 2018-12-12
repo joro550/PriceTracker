@@ -1,20 +1,31 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Prices.Web.Server.Data;
 
 namespace Prices.Web.Server.Identity
 {
     public class CustomUserStore : IUserStore<PriceWebUser>
     {
-        public void Dispose()
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
+
+        public CustomUserStore(IUserRepository userRepository, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
-        public Task<string> GetUserIdAsync(PriceWebUser user, CancellationToken cancellationToken)
+        public void Dispose()
         {
-            throw new NotImplementedException();
+        }
+
+        public async Task<string> GetUserIdAsync(PriceWebUser user, CancellationToken cancellationToken)
+        {
+            var userEntity = await _userRepository.GetByUsername(user.UserName);
+            return userEntity?.Id;
         }
 
         public Task<string> GetUserNameAsync(PriceWebUser user, CancellationToken cancellationToken)

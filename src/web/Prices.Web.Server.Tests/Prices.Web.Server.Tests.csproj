@@ -24,4 +24,10 @@
     <ProjectReference Include="..\Prices.Web.Server\Prices.Web.Server.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.Identity.Core, Version=2.1.6.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      <HintPath>C:\Users\sblas\.nuget\packages\microsoft.extensions.identity.core\2.1.6\lib\netstandard2.0\Microsoft.Extensions.Identity.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

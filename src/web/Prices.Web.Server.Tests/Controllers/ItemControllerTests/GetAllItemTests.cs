@@ -4,6 +4,7 @@ using AutoFixture.Xunit2;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Prices.Web.Server.Data;
+using Prices.Web.Server.Data.Entities;
 using Prices.Web.Server.Tests.Fakes;
 using Prices.Web.Shared.Models.Home;
 using Xunit;
