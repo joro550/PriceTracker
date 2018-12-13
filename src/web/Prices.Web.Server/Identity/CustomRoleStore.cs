@@ -9,7 +9,6 @@ namespace Prices.Web.Server.Identity
     {
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
 
         public Task<IdentityResult> CreateAsync(IdentityRole role, CancellationToken cancellationToken)

@@ -28,6 +28,9 @@ namespace Prices.Web.Server.Tests.Fakes
             => new FakeUserRepository(DefaultUsers);
 
         public Task<UserEntity> GetByUsername(string userUserName) 
-            => Task.FromResult(base.Items.FirstOrDefault(entity => entity.Username == userUserName));
+            => Task.FromResult(Items.FirstOrDefault(entity => entity.Username == userUserName));
+
+        public Task<UserEntity> GetById(string userId)
+            => Task.FromResult(Items.FirstOrDefault(entity => entity.Id == userId));
     }
 }

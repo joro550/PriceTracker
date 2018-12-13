@@ -14,18 +14,18 @@ namespace Prices.Web.Server.Data
 
     public class Repository<T> : IRepository<T> where T : TableEntity, new()
     {
-        private readonly CloudTable _tableClient;
+        protected readonly CloudTable TableClient;
 
         protected Repository(CloudTable tableClient)
         {
-            _tableClient = tableClient;
+            TableClient = tableClient;
         }
 
         public async Task<List<T>> GetAll()
         {
             var tableQuery = new TableQuery<T>();
 
-            var results = await _tableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
+            var results = await TableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
             return results.Results.OrderBy(result => result.Timestamp).ToList();
         }
 
@@ -33,13 +33,13 @@ namespace Prices.Web.Server.Data
         {
             var tableQuery = new TableQuery<T>()
                 .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, value));
-            var results = await _tableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
+            var results = await TableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
             return results.Results.OrderBy(result => result.Timestamp).ToList();
         }
 
         public async Task Add(T item)
         {
-            await _tableClient.ExecuteAsync(TableOperation.Insert(item));
+            await TableClient.ExecuteAsync(TableOperation.Insert(item));
         }
     }
 }

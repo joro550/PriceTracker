@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prices.Web.Server.Data;
 using Prices.Web.Shared.Models.Home;
 
 namespace Prices.Web.Server.Controllers
 {
-    [Route("/api/items")]
+    [ApiController, Route("/api/items"), Authorize]
     public class ItemController : Controller
     {
         private readonly IMapper _mapper;
@@ -44,5 +45,9 @@ namespace Prices.Web.Server.Controllers
                 return NotFound();
             return Ok(_mapper.Map<List<Item>>(items));
         }
+
+        [Route("hello")]
+        public IActionResult SayHello() 
+            => Ok("Hello");
     }
 }

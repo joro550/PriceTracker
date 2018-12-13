@@ -60,8 +60,8 @@ namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
             var objectResult = Assert.IsType<OkObjectResult>(result);
             var model = Assert.IsType<List<Item>>(objectResult.Value);
 
-            Assert.Equal(FakeItemRepository.Items.Count, model.Count);
-            model.Should().BeEquivalentTo(FakeItemRepository.Items,
+            Assert.Equal(FakeItemRepository.StandardItems.Count, model.Count);
+            model.Should().BeEquivalentTo(FakeItemRepository.StandardItems,
                 cfg => cfg.Including(m => m.Id)
                     .Including(m => m.Category)
                     .Including(m => m.Retailer));

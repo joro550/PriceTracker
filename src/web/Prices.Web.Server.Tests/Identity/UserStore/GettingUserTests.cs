@@ -37,5 +37,53 @@ namespace Prices.Web.Server.Tests.Identity.UserStore
                 Assert.Equal(FakeUserRepository.NormalUser.Id, userId);
             }
         }
+
+        public class GettingAUserNameTests
+        {
+            [Fact]
+            public async Task WhenStoreIsEmpty_NullIsReturned()
+            {
+                var userStore = UserStoreBuilder.Build();
+                var userName = await userStore.GetUserNameAsync(new PriceWebUser(), CancellationToken.None);
+                Assert.Null(userName);
+            }
+
+            [Fact]
+            public async Task WhenStoreHasValidUser_ThenIdIsReturned()
+            {
+                var userStore = UserStoreBuilder
+                    .WithUserRepository(FakeUserRepository.WithDefaultUsers())
+                    .Build();
+
+                var normalUser = FakeUserRepository.NormalUser;
+                var priceWebUser = new PriceWebUser { UserName = normalUser.Username, Password = normalUser.Password };
+                var userName = await userStore.GetUserNameAsync(priceWebUser, CancellationToken.None);
+                Assert.Equal(FakeUserRepository.NormalUser.Username, userName);
+            }
+        }
+
+        public class GettingANormalizedUserNameTests
+        {
+            [Fact]
+            public async Task WhenStoreIsEmpty_NullIsReturned()
+            {
+                var userStore = UserStoreBuilder.Build();
+                var userName = await userStore.GetNormalizedUserNameAsync(new PriceWebUser(), CancellationToken.None);
+                Assert.Null(userName);
+            }
+
+            [Fact]
+            public async Task WhenStoreHasValidUser_ThenIdIsReturned()
+            {
+                var userStore = UserStoreBuilder
+                    .WithUserRepository(FakeUserRepository.WithDefaultUsers())
+                    .Build();
+
+                var normalUser = FakeUserRepository.NormalUser;
+                var priceWebUser = new PriceWebUser { UserName = normalUser.Username, Password = normalUser.Password };
+                var userName = await userStore.GetNormalizedUserNameAsync(priceWebUser, CancellationToken.None);
+                Assert.Equal(FakeUserRepository.NormalUser.Username, userName);
+            }
+        }
     }
 }

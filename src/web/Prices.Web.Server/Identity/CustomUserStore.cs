@@ -28,17 +28,19 @@ namespace Prices.Web.Server.Identity
             return userEntity?.Id;
         }
 
-        public Task<string> GetUserNameAsync(PriceWebUser user, CancellationToken cancellationToken)
+        public async Task<string> GetUserNameAsync(PriceWebUser user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var userEntity = await _userRepository.GetByUsername(user.UserName);
+            return userEntity?.Username;
+        }
+
+        public async Task<string> GetNormalizedUserNameAsync(PriceWebUser user, CancellationToken cancellationToken)
+        {
+            var userEntity = await _userRepository.GetByUsername(user.UserName);
+            return userEntity?.Username;
         }
 
         public Task SetUserNameAsync(PriceWebUser user, string userName, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<string> GetNormalizedUserNameAsync(PriceWebUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -48,12 +50,12 @@ namespace Prices.Web.Server.Identity
             throw new NotImplementedException();
         }
 
-        public Task<IdentityResult> CreateAsync(PriceWebUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> UpdateAsync(PriceWebUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IdentityResult> UpdateAsync(PriceWebUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> CreateAsync(PriceWebUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -63,14 +65,16 @@ namespace Prices.Web.Server.Identity
             throw new NotImplementedException();
         }
 
-        public Task<PriceWebUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public async Task<PriceWebUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var userEntity = await _userRepository.GetById(userId);
+            return _mapper.Map<PriceWebUser>(userEntity);
         }
 
-        public Task<PriceWebUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public async Task<PriceWebUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var userEntity = await _userRepository.GetByUsername(normalizedUserName);
+            return _mapper.Map<PriceWebUser>(userEntity);
         }
     }
 }
