@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Prices.Web.Server.Identity;
 using Prices.Web.Shared.Models.Users;
 
 namespace Prices.Web.Server.Controllers

@@ -1,13 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using AutoMapper;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
@@ -28,16 +27,17 @@ namespace Prices.Web.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var webTokenConfig = JsonWebTokenConfiguration.FromConfiguration(_configuration);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
             });
 
-            services.AddIdentity<PriceWebUser, IdentityRole>()
-                .AddDefaultTokenProviders();
-
-            services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient(sp => webTokenConfig);
+            services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
+            services.AddTransient<ITokenService, JsonWebTokenService>();
             services.AddTransient(sp => _configuration);
 
             services.AddAuthentication(options =>
@@ -53,9 +53,9 @@ namespace Prices.Web.Server
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ValidIssuer = _configuration["Jwt:Issuer"],
-                        ValidAudience = _configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
+                        ValidIssuer = webTokenConfig.Issuer,
+                        ValidAudience = webTokenConfig.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(webTokenConfig.Key))
                     };
                 });
 
@@ -72,8 +72,6 @@ namespace Prices.Web.Server
                 CloudStorageAccount.Parse(_configuration.GetConnectionString("StorageConnectionString"));
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
-            services.AddTransient<IUserStore<PriceWebUser>, CustomUserStore>();
-            services.AddTransient<IRoleStore<IdentityRole>, CustomRoleStore>();
             services.AddTransient(s => config.CreateMapper());
             services.AddTransient(s => storageAccount.CreateCloudTableClient());
             services.AddTransient<IItemRepository, ItemRepository>();
