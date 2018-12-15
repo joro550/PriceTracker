@@ -1,8 +1,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Prices.Web.Server.Data;
 using Prices.Web.Server.Extensions;
+using Prices.Web.Server.Handlers.Data;
 
 namespace Prices.Web.Server.Controllers
 {

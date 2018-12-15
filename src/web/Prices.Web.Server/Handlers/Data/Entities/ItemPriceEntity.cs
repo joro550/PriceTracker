@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace Prices.Web.Server.Data.Entities
+namespace Prices.Web.Server.Handlers.Data.Entities
 {
     public class ItemPriceEntity : TableEntity
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Prices.Web.Server.Data;
+using Prices.Web.Server.Handlers.Data;
 using Prices.Web.Shared.Models.Home;
 
 namespace Prices.Web.Server.Controllers

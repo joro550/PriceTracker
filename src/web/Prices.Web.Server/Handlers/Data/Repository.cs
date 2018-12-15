@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace Prices.Web.Server.Data
+namespace Prices.Web.Server.Handlers.Data
 {
     public interface IRepository<T> where T : TableEntity, new()
     {

@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
-using Prices.Web.Server.Data.Entities;
+using Prices.Web.Server.Handlers.Data.Entities;
 
-namespace Prices.Web.Server.Data
+namespace Prices.Web.Server.Handlers.Data
 {
     public interface IUserRepository
     {

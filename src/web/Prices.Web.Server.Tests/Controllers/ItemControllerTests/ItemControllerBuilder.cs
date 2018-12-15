@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Moq;
 using Prices.Web.Server.Controllers;
-using Prices.Web.Server.Data;
+using Prices.Web.Server.Handlers.Data;
 
 namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
 {

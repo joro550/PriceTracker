@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Prices.Web.Server.Data;
-using Prices.Web.Server.Data.Entities;
+using Prices.Web.Server.Handlers.Data.Entities;
 using Xunit;
 
 namespace Prices.Web.Server.Tests.Data.ItemPriceRepositoryTests

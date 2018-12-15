@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Text;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.WindowsAzure.Storage;
-using Prices.Web.Server.Data;
+using Prices.Web.Server.Handlers.Data;
 using Prices.Web.Server.Identity;
 
 namespace Prices.Web.Server
@@ -29,17 +30,13 @@ namespace Prices.Web.Server
         public void ConfigureServices(IServiceCollection services)
         {
             var webTokenConfig = JsonWebTokenConfiguration.FromConfiguration(_configuration);
+            var cipherConfig = CipherServiceConfig.FromConfiguration(_configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
             });
-
-            services.AddTransient(sp => webTokenConfig);
-            services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
-            services.AddTransient<ITokenService, JsonWebTokenService>();
-            services.AddTransient(sp => _configuration);
 
             services.AddAuthentication(options =>
                 {
@@ -69,12 +66,20 @@ namespace Prices.Web.Server
                 });
             });
 
+            services.AddMediatR(typeof(Startup).Assembly);
+
             var storageAccount =
                 CloudStorageAccount.Parse(_configuration.GetConnectionString("StorageConnectionString"));
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
+            services.AddTransient(sp => webTokenConfig);
+            services.AddTransient(sp => cipherConfig);
+            services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
+            services.AddTransient<ITokenService, JsonWebTokenService>();
+            services.AddTransient(sp => _configuration);
             services.AddTransient(s => config.CreateMapper());
             services.AddTransient(s => storageAccount.CreateCloudTableClient());
+            services.AddTransient<ICipherService, CipherService>();
             services.AddTransient<IItemRepository, ItemRepository>();
             services.AddTransient<IItemPriceRepository, ItemPriceRepository>();
             services.AddTransient<IUserRepository, UserRepository>();

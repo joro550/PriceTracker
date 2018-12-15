@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
-using Prices.Web.Server.Data;
+using Prices.Web.Server.Handlers.Data;
 
 namespace Prices.Web.Server.Tests.Fakes
 {

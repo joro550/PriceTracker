@@ -1,5 +1,5 @@
 using Prices.Web.Server.Controllers;
-using Prices.Web.Server.Data;
+using Prices.Web.Server.Handlers.Data;
 using Prices.Web.Server.Tests.Fakes;
 
 namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests

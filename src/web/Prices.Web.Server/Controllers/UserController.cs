@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Prices.Web.Server.Data;
+using Prices.Web.Server.Handlers.Requests;
 using Prices.Web.Server.Identity;
 using Prices.Web.Shared.Models.Users;
 
@@ -10,18 +11,22 @@ namespace Prices.Web.Server.Controllers
     public class UserController : Controller
     {
         private readonly ITokenService _tokenService;
-        private readonly IUserRepository _userRepository;
+        private readonly IMediator _mediator;
+        private readonly ICipherService _cipherService;
 
-        public UserController(ITokenService tokenService, IUserRepository userRepository)
+        public UserController(ITokenService tokenService, IMediator mediator, ICipherService cipherService)
         {
             _tokenService = tokenService;
-            _userRepository = userRepository;
+            _mediator = mediator;
+            _cipherService = cipherService;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UserModel user)
         {
-            var userEntity = await _userRepository.GetByUsername(user.Username);
+            var userEntity = await _mediator.Send(new GetUserByUsernameRequest {Username = user.Username});
+            var password = _cipherService.Encrypt(user.Password);
+
             if (user.Password == userEntity?.Password)
                 return Ok(new TokenResult { Token = _tokenService.BuildToken(user.Username)});
             return BadRequest();

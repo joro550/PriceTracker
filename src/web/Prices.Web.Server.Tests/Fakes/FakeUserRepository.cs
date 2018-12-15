@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Prices.Web.Server.Data;
-using Prices.Web.Server.Data.Entities;
+using Prices.Web.Server.Handlers.Data;
+using Prices.Web.Server.Handlers.Data.Entities;
 
 namespace Prices.Web.Server.Tests.Fakes
 {

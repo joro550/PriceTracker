@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Prices.Web.Server.Data;
-using Prices.Web.Server.Data.Entities;
+using Prices.Web.Server.Handlers.Data.Entities;
 using Prices.Web.Shared.Models.Home;
 using Prices.Web.Shared.Models.Items;
 
