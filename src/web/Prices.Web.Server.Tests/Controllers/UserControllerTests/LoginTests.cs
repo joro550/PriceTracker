@@ -16,7 +16,7 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
             => _fixture = fixture.ApplicationBuilder;
 
         [Fact]
-        public async Task WhenNoUsersExist_ThenNoContentIsReturned()
+        public async Task WhenNoUsersExist_ThenBadRequestIsReturned()
         {
             var webApplication = _fixture.WithUserRepository(FakeUserRepository.WithNoRecords()).Build(); 
             var response = await webApplication.PostAsJsonAsync("/api/user/login",
@@ -27,11 +27,33 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
         }
 
         [Fact]
-        public async Task WhenIncorrectUsernameIsPassed_NoContentResponseIsReturned()
+        public async Task WhenIncorrectUsernameIsPassed_ThenBadRequestIsReturned()
         {
             var webApplication = _fixture.WithUserRepository(FakeUserRepository.WithDefaultUsers()).Build();
             var response = await webApplication.PostAsJsonAsync("/api/user/login",
                 new UserModel { Username = "WrongUsername", Password = "WrongPassword" });
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Empty(await response.Content.ReadAsStringAsync());
+        }
+
+        [Fact]
+        public async Task WhenUsernameIsNotSpecified_ThenBadRequestIsReturned()
+        {
+            var webApplication = _fixture.WithUserRepository(FakeUserRepository.WithDefaultUsers()).Build();
+            var response = await webApplication.PostAsJsonAsync("/api/user/login",
+                new UserModel { Password = "WrongPassword" });
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Empty(await response.Content.ReadAsStringAsync());
+        }
+
+        [Fact]
+        public async Task WhenPasswordIsNotSpecified_ThenBadRequestIsReturned()
+        {
+            var webApplication = _fixture.WithUserRepository(FakeUserRepository.WithDefaultUsers()).Build();
+            var response = await webApplication.PostAsJsonAsync("/api/user/login",
+                new UserModel { Username = "username"});
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Empty(await response.Content.ReadAsStringAsync());
@@ -46,7 +68,6 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
                 new UserModel { Username = normalUser.Username, Password = normalUser.Password });
 
             var tokenResult = JsonConvert.DeserializeObject<TokenResult>(await response.Content.ReadAsStringAsync());
-
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             Assert.NotNull(tokenResult);
             Assert.NotEmpty(tokenResult.Token);
