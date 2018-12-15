@@ -25,6 +25,7 @@ namespace Prices.Web.Server
         public Startup(IConfiguration configuration) 
             => _configuration = configuration;
 
+
         public void ConfigureServices(IServiceCollection services)
         {
             var webTokenConfig = JsonWebTokenConfiguration.FromConfiguration(_configuration);
@@ -77,7 +78,6 @@ namespace Prices.Web.Server
             services.AddTransient<IItemRepository, ItemRepository>();
             services.AddTransient<IItemPriceRepository, ItemPriceRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient(s => storageAccount.CreateCloudTableClient());
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
