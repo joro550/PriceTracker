@@ -1,4 +1,4 @@
-﻿namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
+﻿namespace Prices.Web.Server.Tests.Controllers
 {
     public class WebApplicationFixture
     {

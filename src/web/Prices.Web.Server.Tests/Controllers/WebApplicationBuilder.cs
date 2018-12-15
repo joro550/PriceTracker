@@ -8,7 +8,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 using Prices.Web.Server.Data;
 using Prices.Web.Server.Tests.Fakes;
 
-namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
+namespace Prices.Web.Server.Tests.Controllers
 {
     public class WebApplicationBuilder
     {
