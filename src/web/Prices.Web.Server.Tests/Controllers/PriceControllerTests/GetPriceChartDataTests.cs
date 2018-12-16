@@ -18,7 +18,6 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
         public GetPriceChartDataTests(WebApplicationFixture fixture) 
             => _fixture = fixture.ApplicationBuilder;
 
-
         [Fact]
         public async Task WhenNoPricesExist_ThenNoContentResultIsReturned()
         {
