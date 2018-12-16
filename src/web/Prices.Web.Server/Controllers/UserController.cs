@@ -33,6 +33,12 @@ namespace Prices.Web.Server.Controllers
             return BadRequest();
         }
 
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserModel createUser)
+        {
+            return BadRequest();
+        }
+
         private static async Task<bool> ValidateModel(UserModel user)
         {
             var validationResult = await new UserModelValidator()
