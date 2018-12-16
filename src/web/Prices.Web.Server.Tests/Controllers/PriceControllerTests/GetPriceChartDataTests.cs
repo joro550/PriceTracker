@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Blazor;
 using Prices.Web.Server.Handlers.Data.Entities;
 using Prices.Web.Server.Tests.Fakes;
 using Prices.Web.Shared.Models;
@@ -10,44 +11,24 @@ using Xunit;
 
 namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
 {
-    public class GetPriceChartDataTests
+    public class GetPriceChartDataTests: IClassFixture<WebApplicationFixture>
     {
-        private readonly PriceControllerBuilder _priceControllerBuilder;
+        private readonly WebApplicationBuilder _fixture;
 
-        public GetPriceChartDataTests() 
-            => _priceControllerBuilder = new PriceControllerBuilder();
+        public GetPriceChartDataTests(WebApplicationFixture fixture) 
+            => _fixture = fixture.ApplicationBuilder;
 
-        [Fact]
-        public async Task HasAllItemChartDataMethod()
-        {
-            var prices = new List<ItemPriceEntity> {new ItemPriceEntity()};
-            var controller = _priceControllerBuilder
-                .WithItemPriceRepository(FakeItemPriceRepository.WithPrices(prices))
-                .Build();
-            Assert.IsType<OkObjectResult>(await controller.PriceChartData());
-        }
 
         [Fact]
         public async Task WhenNoPricesExist_ThenNoContentResultIsReturned()
         {
-            var controller = _priceControllerBuilder
+            var webApplication = _fixture
                 .WithItemPriceRepository(FakeItemPriceRepository.WithNoPrices())
                 .Build();
-            Assert.IsType<NoContentResult>(await controller.PriceChartData());
+            var response = await webApplication.GetAsync("/api/prices/ChartData");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
-        [Fact]
-        public async Task WhenPricesExist_ThenChartDataIsReturned()
-        {
-            var prices = new List<ItemPriceEntity> {new ItemPriceEntity()};
-            
-            var controller = _priceControllerBuilder
-                .WithItemPriceRepository(FakeItemPriceRepository.WithPrices(prices))
-                .Build();
-            var result = Assert.IsType<OkObjectResult>(await controller.PriceChartData());
-            Assert.IsType<ChartData>(result.Value);
-        }
-        
         [Fact]
         public async Task WhenPricesExist_ThenChartDataLabelsHaveBeenLoadedSuccessfully()
         {
@@ -58,17 +39,16 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
                 new ItemPriceEntity { PriceDate = new DateTime(2018,1,3)}
             };
             
-            var controller = _priceControllerBuilder
+            var webApplication = _fixture
                 .WithItemPriceRepository(FakeItemPriceRepository.WithPrices(prices))
                 .Build();
-            var result = Assert.IsType<OkObjectResult>(await controller.PriceChartData());
-            var model = Assert.IsType<ChartData>(result.Value);
+            var response = await webApplication.GetJsonAsync<ChartData>("/api/prices/ChartData");
             
-            Assert.Contains("2018-01-01", model.Labels);
-            Assert.Contains("2018-01-02", model.Labels);
-            Assert.Contains("2018-01-03", model.Labels);
+            Assert.Contains("2018-01-01", response.Labels);
+            Assert.Contains("2018-01-02", response.Labels);
+            Assert.Contains("2018-01-03", response.Labels);
         }
-        
+
         [Fact]
         public async Task WhenPricesExist_ThenChartDataLabelsHaveDistinctData()
         {
@@ -81,19 +61,19 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
                 new ItemPriceEntity { PriceDate = new DateTime(2018,1,2)},
                 new ItemPriceEntity { PriceDate = new DateTime(2018,1,3)}
             };
-            
-            var controller = _priceControllerBuilder
+
+            var webApplication = _fixture
                 .WithItemPriceRepository(FakeItemPriceRepository.WithPrices(prices))
                 .Build();
-            var result = Assert.IsType<OkObjectResult>(await controller.PriceChartData());
-            var model = Assert.IsType<ChartData>(result.Value);
-            Assert.Single(model.Labels.Where(l => l == "2018-01-01"));
-            Assert.Single(model.Labels.Where(l => l == "2018-01-02"));
-            Assert.Single(model.Labels.Where(l => l == "2018-01-03"));
+            
+            var response = await webApplication.GetJsonAsync<ChartData>("/api/prices/ChartData");
+            Assert.Single(response.Labels.Where(l => l == "2018-01-01"));
+            Assert.Single(response.Labels.Where(l => l == "2018-01-02"));
+            Assert.Single(response.Labels.Where(l => l == "2018-01-03"));
         }
 
         [Fact]
-        public async Task WhenPricesExistWitTimeInformation_ThenChartDataLabelsHaveDistinctData()
+        public async Task WhenPricesExistWithTimeInformation_ThenChartDataLabelsHaveDistinctData()
         {
             var prices = new List<ItemPriceEntity>
             {
@@ -104,15 +84,15 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
                 new ItemPriceEntity { PriceDate = new DateTime(2018,1,2)},
                 new ItemPriceEntity { PriceDate = new DateTime(2018,1,3)}
             };
-
-            var controller = _priceControllerBuilder
+            
+            var webApplication = _fixture
                 .WithItemPriceRepository(FakeItemPriceRepository.WithPrices(prices))
                 .Build();
-            var result = Assert.IsType<OkObjectResult>(await controller.PriceChartData());
-            var model = Assert.IsType<ChartData>(result.Value);
-            Assert.Single(model.Labels.Where(l => l == "2018-01-01"));
-            Assert.Single(model.Labels.Where(l => l == "2018-01-02"));
-            Assert.Single(model.Labels.Where(l => l == "2018-01-03"));
+            
+            var response = await webApplication.GetJsonAsync<ChartData>("/api/prices/ChartData");
+            Assert.Single(response.Labels.Where(l => l == "2018-01-01"));
+            Assert.Single(response.Labels.Where(l => l == "2018-01-02"));
+            Assert.Single(response.Labels.Where(l => l == "2018-01-03"));
         }
 
         [Fact]
@@ -125,16 +105,16 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
                 new ItemPriceEntity {PartitionKey = "1", PriceDate = new DateTime(2018,1,3), Price = "£6.00"},
             };
             
-            var controller = _priceControllerBuilder
+            var webApplication = _fixture
                 .WithItemPriceRepository(FakeItemPriceRepository.WithPrices(prices))
                 .Build();
-            var result = Assert.IsType<OkObjectResult>(await controller.PriceChartData());
-            var model = Assert.IsType<ChartData>(result.Value);
-            Assert.Contains("1.00", model.DataSets.SelectMany(ds => ds.Data));
-            Assert.Contains("5.00", model.DataSets.SelectMany(ds => ds.Data));
-            Assert.Contains("6.00", model.DataSets.SelectMany(ds => ds.Data));
+            
+            var response = await webApplication.GetJsonAsync<ChartData>("/api/prices/ChartData");
+            Assert.Contains("1.00", response.DataSets.SelectMany(ds => ds.Data));
+            Assert.Contains("5.00", response.DataSets.SelectMany(ds => ds.Data));
+            Assert.Contains("6.00", response.DataSets.SelectMany(ds => ds.Data));
         }
-        
+
         [Fact]
         public async Task WhenPricesExist_ThenChartDataPricesAreLoadedInDateOrder()
         {
@@ -145,16 +125,16 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
                 new ItemPriceEntity {PartitionKey = "1", PriceDate = new DateTime(2018,1,5), Price = "£6.00"},
             };
             
-            var controller = _priceControllerBuilder
+            var webApplication = _fixture
                 .WithItemPriceRepository(FakeItemPriceRepository.WithPrices(prices))
                 .Build();
-            var result = Assert.IsType<OkObjectResult>(await controller.PriceChartData());
-            var model = Assert.IsType<ChartData>(result.Value);
-            Assert.Contains("5.00", model.DataSets[0].Data[0]);
-            Assert.Contains("1.00", model.DataSets[0].Data[1]);
-            Assert.Contains("6.00", model.DataSets[0].Data[2]);
+            
+            var response = await webApplication.GetJsonAsync<ChartData>("/api/prices/ChartData");
+            Assert.Contains("5.00", response.DataSets[0].Data[0]);
+            Assert.Contains("1.00", response.DataSets[0].Data[1]);
+            Assert.Contains("6.00", response.DataSets[0].Data[2]);
         }
-        
+
         [Fact]
         public async Task WhenMultiplePricesExistAndOneDoesNotHavePriceOnDate_ThenChartDataPricesWithBlankAsMissingPrice()
         {
@@ -168,18 +148,18 @@ namespace Prices.Web.Server.Tests.Controllers.PriceControllerTests
                 new ItemPriceEntity {PartitionKey = "2", PriceDate = new DateTime(2018, 1, 5), Price = "£6.00"},
             };
             
-            var controller = _priceControllerBuilder
+            var webApplication = _fixture
                 .WithItemPriceRepository(FakeItemPriceRepository.WithPrices(prices))
                 .Build();
-            var result = Assert.IsType<OkObjectResult>(await controller.PriceChartData());
-            var model = Assert.IsType<ChartData>(result.Value);
-            Assert.Contains("5.00", model.DataSets[0].Data[0]);
-            Assert.Contains("1.00", model.DataSets[0].Data[1]);
-            Assert.Contains("6.00", model.DataSets[0].Data[2]);
             
-            Assert.Contains("", model.DataSets[1].Data[0]);
-            Assert.Contains("1.00", model.DataSets[1].Data[1]);
-            Assert.Contains("6.00", model.DataSets[1].Data[2]);
+            var response = await webApplication.GetJsonAsync<ChartData>("/api/prices/ChartData");
+            Assert.Contains("5.00", response.DataSets[0].Data[0]);
+            Assert.Contains("1.00", response.DataSets[0].Data[1]);
+            Assert.Contains("6.00", response.DataSets[0].Data[2]);
+            
+            Assert.Contains("", response.DataSets[1].Data[0]);
+            Assert.Contains("1.00", response.DataSets[1].Data[1]);
+            Assert.Contains("6.00", response.DataSets[1].Data[2]);
         }
     }
 }

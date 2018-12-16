@@ -41,7 +41,7 @@ namespace Prices.Web.Server.Controllers
         {
             var items = await _repository.GetAll();
             if (!items.Any())
-                return NotFound();
+                return NoContent();
             return Ok(_mapper.Map<List<Item>>(items));
         }
     }
