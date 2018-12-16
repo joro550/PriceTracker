@@ -12,15 +12,12 @@ namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
 {
     public class GetAllItemTests : IClassFixture<ItemControllerFixture>
     {
-        public GetAllItemTests(ItemControllerFixture fixture)
-        {
-            _fixture = fixture.Builder;
-        }
+        public GetAllItemTests(ItemControllerFixture fixture) 
+            => _fixture = fixture.Builder;
 
         private readonly ItemControllerBuilder _fixture;
 
-        [Theory]
-        [AutoData]
+        [Theory, AutoData]
         public async Task WhenItemsExist_ThenItemsAreReturned(List<ItemEntity> items)
         {
             var itemController = _fixture
