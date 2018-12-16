@@ -1,9 +1,9 @@
-﻿using System.Threading;
+﻿using MediatR;
+using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
 using Prices.Web.Server.Handlers.Data;
-using Prices.Web.Server.Handlers.Data.Entities;
 using Prices.Web.Server.Handlers.Requests;
+using Prices.Web.Server.Handlers.Data.Entities;
 
 namespace Prices.Web.Server.Handlers
 {
@@ -12,12 +12,13 @@ namespace Prices.Web.Server.Handlers
     {
         private readonly IUserRepository _userRepository;
 
-        public UserHandler(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
+        public UserHandler(IUserRepository userRepository) 
+            => _userRepository = userRepository;
 
-        public async Task<UserEntity> Handle(GetUserByUsernameRequest byUsernameRequest, CancellationToken cancellationToken) 
-            => await _userRepository.GetByUsername(byUsernameRequest.Username);
+        public async Task<UserEntity> Handle(GetUserByUsernameRequest byUsernameRequest, CancellationToken cancellationToken)
+        {
+            var userEntity = await _userRepository.GetByUsername(byUsernameRequest.Username);
+            return userEntity ?? new NullUserEntity();
+        }
     }
 }

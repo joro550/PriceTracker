@@ -65,7 +65,7 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
             var webApplication = _fixture.WithUserRepository(FakeUserRepository.WithDefaultUsers()).Build();
             var normalUser = FakeUserRepository.NormalUser;
             var response = await webApplication.PostAsJsonAsync("/api/user/login",
-                new UserModel { Username = normalUser.Username, Password = normalUser.Password });
+                new UserModel { Username = normalUser.Username, Password = normalUser.OriginalPassword });
 
             var tokenResult = JsonConvert.DeserializeObject<TokenResult>(await response.Content.ReadAsStringAsync());
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);

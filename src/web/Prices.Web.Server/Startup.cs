@@ -30,7 +30,6 @@ namespace Prices.Web.Server
         public void ConfigureServices(IServiceCollection services)
         {
             var webTokenConfig = JsonWebTokenConfiguration.FromConfiguration(_configuration);
-            var cipherConfig = CipherServiceConfig.FromConfiguration(_configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.Configure<CookiePolicyOptions>(options =>
@@ -73,12 +72,12 @@ namespace Prices.Web.Server
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
             services.AddTransient(sp => webTokenConfig);
-            services.AddTransient(sp => cipherConfig);
-            services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
-            services.AddTransient<ITokenService, JsonWebTokenService>();
             services.AddTransient(sp => _configuration);
             services.AddTransient(s => config.CreateMapper());
             services.AddTransient(s => storageAccount.CreateCloudTableClient());
+
+            services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
+            services.AddTransient<ITokenService, JsonWebTokenService>();
             services.AddTransient<ICipherService, CipherService>();
             services.AddTransient<IItemRepository, ItemRepository>();
             services.AddTransient<IItemPriceRepository, ItemPriceRepository>();

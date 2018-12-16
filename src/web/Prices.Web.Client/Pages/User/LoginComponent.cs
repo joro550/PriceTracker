@@ -1,5 +1,4 @@
 ﻿using System.Net.Http;
-using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Blazor.Components;
@@ -22,7 +21,7 @@ namespace Prices.Web.Client.Pages.User
 
             var stringContent = new StringContent(serialize, Encoding.UTF8, "application/json");
 //            var response = await Client.PostAsync("/api/user/login", stringContent);
-            //Logger.LogDebug(response.StatusCode.ToString());
+//            Logger.LogDebug(response.StatusCode.ToString());
 
 
             var response = await Client.GetAsync("/api/items/hello");
