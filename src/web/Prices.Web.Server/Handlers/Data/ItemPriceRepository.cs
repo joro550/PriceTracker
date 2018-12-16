@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
+using Prices.Web.Server.Handlers.Data.Entities;
 
-namespace Prices.Web.Server.Data
+namespace Prices.Web.Server.Handlers.Data
 {
     public interface IItemPriceRepository
     {

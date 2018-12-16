@@ -1,30 +1,43 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using MediatR;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Prices.Web.Server.Identity;
+using Prices.Web.Shared.Models.Users;
+using Prices.Web.Server.Handlers.Requests;
 
 namespace Prices.Web.Server.Controllers
 {
     [Route("/api/user")]
     public class UserController : Controller
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IMediator _mediator;
+        private readonly ITokenService _tokenService;
+        private readonly ICipherService _cipherService;
 
-        public UserController(SignInManager<IdentityUser> signInManager) 
-            => _signInManager = signInManager;
+        public UserController(IMediator mediator, ITokenService tokenService, ICipherService cipherService)
+        {
+            _mediator = mediator;
+            _tokenService = tokenService;
+            _cipherService = cipherService;
+        }
 
-//        [Route("Login")]
-//        public async Task<IActionResult> Login(UserModel user)
-//        {
-//            var identityUser = new IdentityUser{ UserName = user.Username, PasswordHash = user.Password};
-//            await _signInManager.SignInAsync(identityUser, true);
-//            return Ok();
-//        }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody]UserModel user)
+        {
+            if (!await ValidateModel(user))
+                return BadRequest();
+            
+            var userEntity = await _mediator.Send(new GetUserByUsernameRequest {Username = user.Username});
+            if (_cipherService.ValidatePasswordAgainstHash(user.Password, userEntity.PasswordSalt, userEntity.Password))
+                return Ok(new TokenResult { Token = _tokenService.BuildToken(user.Username)});
+            return BadRequest();
+        }
 
-    }
-
-    public class UserModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
+        private static async Task<bool> ValidateModel(UserModel user)
+        {
+            var validationResult = await new UserModelValidator()
+                .ValidateAsync(user);
+            return validationResult.IsValid;
+        }
     }
 }

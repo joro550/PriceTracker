@@ -25,7 +25,8 @@ namespace Prices.Web.Client.Pages.ItemPrices
 
         protected override async Task OnInitAsync()
         {
-            Logger.LogDebug("OnInitAsync");
+            ChartConfig = new LineChartConfig();
+
             var chartData = await Client.GetAsync("/api/prices/ChartData");
             ChartConfig = chartData.IsSuccessStatusCode 
                 ? await BuildChartConfig(chartData) 
@@ -47,25 +48,25 @@ namespace Prices.Web.Client.Pages.ItemPrices
                     Text = "Item Prices",
                     Display = true,
                     Responsive = true,
-                    Title = new OptionsTitle {Display = true, Text = "Line Chart"},
+                    Title = new OptionsTitle {Display = true, Text = "Item Prices"},
                     Legend = new Legend
                     {
-                        Position = LegendPosition.BOTTOM.ToString(),
+                        Position = LegendPosition.TOP.ToString(),
                         Labels = new Labels
                         {
-                            UsePointStyle = true
+                            UsePointStyle = true,
                         }
+                    },
+                    Hover = new LineChartOptionsHover()
+                    {
+                        Intersect = true,
+                        Mode = Mode.nearest
                     },
                     Tooltips = new Tooltips
                     {
                         Mode = Mode.nearest,
-                        Intersect = false
+                        Intersect = true
                     },
-                    Hover = new LineChartOptionsHover
-                    {
-                        Intersect = true,
-                        Mode = Mode.nearest
-                    }
                 },
                 Data = new LineChartData
                 {
@@ -76,7 +77,7 @@ namespace Prices.Web.Client.Pages.ItemPrices
 
             foreach (var dataSet in chartData.DataSets)
             {
-                var lineChartDataset = new LineChartDataset
+                var chartDataSet = new LineChartDataset
                 {
                     Label = dataSet.Label, 
                     BackgroundColor = GetRandomColor(),
@@ -88,9 +89,9 @@ namespace Prices.Web.Client.Pages.ItemPrices
                 };
                 
                 foreach (var datum in dataSet.Data)
-                    lineChartDataset.Data.Add(datum);
+                    chartDataSet.Data.Add(datum);
 
-                buildChartConfig.Data.Datasets.Add(lineChartDataset);
+                buildChartConfig.Data.Datasets.Add(chartDataSet);
             }
             return  buildChartConfig;
         }

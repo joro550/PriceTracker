@@ -1,18 +1,21 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Mime;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Text;
 using AutoMapper;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Blazor.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.WindowsAzure.Storage;
-using Prices.Web.Server.Data;
+using Prices.Web.Server.Handlers.Data;
+using Prices.Web.Server.Identity;
 
 namespace Prices.Web.Server
 {
@@ -20,83 +23,76 @@ namespace Prices.Web.Server
     {
         private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+        public Startup(IConfiguration configuration) 
+            => _configuration = configuration;
+
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var webTokenConfig = JsonWebTokenConfiguration.FromConfiguration(_configuration);
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddUserStore<PriceUserStore>();
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+            });
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = webTokenConfig.Issuer,
+                        ValidAudience = webTokenConfig.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(webTokenConfig.Key))
+                    };
+                });
+
             services.AddResponseCompression(options =>
             {
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
                 {
-                    MediaTypeNames.Application.Octet,
+                    MediaTypeNames.Application.Octet, 
                     WasmMediaTypeNames.Application.Wasm
                 });
             });
+
+            services.AddMediatR(typeof(Startup).Assembly);
 
             var storageAccount =
                 CloudStorageAccount.Parse(_configuration.GetConnectionString("StorageConnectionString"));
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<AutoMapperProfile>());
-            services.AddScoped(s => config.CreateMapper());
-            services.AddScoped(s => storageAccount.CreateCloudTableClient());
-            services.AddScoped<IItemRepository, ItemRepository>();
-            services.AddScoped<IItemPriceRepository, ItemPriceRepository>();
-            services.AddScoped(s => storageAccount.CreateCloudTableClient());
+            services.AddTransient(sp => webTokenConfig);
+            services.AddTransient(sp => _configuration);
+            services.AddTransient(s => config.CreateMapper());
+            services.AddTransient(s => storageAccount.CreateCloudTableClient());
+
+            services.AddTransient<SecurityTokenHandler, JwtSecurityTokenHandler>();
+            services.AddTransient<ITokenService, JsonWebTokenService>();
+            services.AddTransient<ICipherService, CipherService>();
+            services.AddTransient<IItemRepository, ItemRepository>();
+            services.AddTransient<IItemPriceRepository, ItemPriceRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseResponseCompression();
+            if (env.IsDevelopment())
+                app.UseDeveloperExceptionPage();
 
-            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
-
-            app.UseMvc(routes => { routes.MapRoute("default", "{controller}/{action}/{id?}"); });
-
+            app.UseAuthentication();
+            app.UseMvc(routes => routes.MapRoute("default", "api/{controller}/{action}/{id?}"));
             app.UseBlazor<Client.Startup>();
         }
-    }
-
-    public class PriceUserStore : IUserStore<IdentityUser>
-    {
-        public void Dispose()
-        {
-            
-        }
-
-        public Task<string> GetUserIdAsync(IdentityUser user, CancellationToken cancellationToken) 
-            => Task.FromResult("userId");
-
-        public Task<string> GetUserNameAsync(IdentityUser user, CancellationToken cancellationToken) 
-            => Task.FromResult("userName");
-
-        public Task SetUserNameAsync(IdentityUser user, string userName, CancellationToken cancellationToken) 
-            => Task.CompletedTask;
-
-        public Task<string> GetNormalizedUserNameAsync(IdentityUser user, CancellationToken cancellationToken) 
-            => Task.FromResult("userName");
-
-        public Task SetNormalizedUserNameAsync(IdentityUser user, string normalizedName, CancellationToken cancellationToken) 
-            => Task.FromResult("userName");
-
-        public Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken) 
-            => Task.FromResult(IdentityResult.Success);
-
-        public Task<IdentityResult> UpdateAsync(IdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(IdentityResult.Success);
-
-        public Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken)
-            => Task.FromResult(IdentityResult.Success);
-
-        public Task<IdentityUser> FindByIdAsync(string userId, CancellationToken cancellationToken) 
-            => Task.FromResult(new IdentityUser());
-
-        public Task<IdentityUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken) 
-            => Task.FromResult(new IdentityUser());
     }
 }

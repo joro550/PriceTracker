@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
-using Prices.Web.Server.Data;
+using Prices.Web.Server.Handlers.Data;
+using Prices.Web.Server.Handlers.Data.Entities;
 
 namespace Prices.Web.Server.Tests.Fakes
 {
-    public class FakeItemRepository : BaseRepository<ItemEntity>, IItemRepository
+    public class FakeItemRepository : InMemoryRepository<ItemEntity>, IItemRepository
     {
-        public static readonly List<ItemEntity> Items = new List<ItemEntity>
+        public static readonly List<ItemEntity> StandardItems = new List<ItemEntity>
         {
             new ItemEntity
             {
@@ -20,19 +21,13 @@ namespace Prices.Web.Server.Tests.Fakes
         {
         }
 
-        public static FakeItemRepository WithItems(List<ItemEntity> items)
-        {
-            return new FakeItemRepository(items);
-        }
+        public static FakeItemRepository WithItems(List<ItemEntity> items) 
+            => new FakeItemRepository(items);
 
-        public static FakeItemRepository WithStandardItems()
-        {
-            return new FakeItemRepository(Items);
-        }
+        public static FakeItemRepository WithStandardItems() 
+            => new FakeItemRepository(StandardItems);
 
-        public static FakeItemRepository WithNoItems()
-        {
-            return new FakeItemRepository(new List<ItemEntity>());
-        }
+        public static FakeItemRepository WithNoItems() 
+            => new FakeItemRepository(new List<ItemEntity>());
     }
 }

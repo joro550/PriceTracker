@@ -3,12 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Prices.Web.Server.Data;
+using Prices.Web.Server.Handlers.Data;
 using Prices.Web.Shared.Models.Home;
 
 namespace Prices.Web.Server.Controllers
 {
-    [Route("/api/items")]
+    [ApiController, Route("/api/items")]
     public class ItemController : Controller
     {
         private readonly IMapper _mapper;
@@ -41,7 +41,7 @@ namespace Prices.Web.Server.Controllers
         {
             var items = await _repository.GetAll();
             if (!items.Any())
-                return NotFound();
+                return NoContent();
             return Ok(_mapper.Map<List<Item>>(items));
         }
     }
