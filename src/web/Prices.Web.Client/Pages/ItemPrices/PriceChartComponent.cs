@@ -35,6 +35,13 @@ namespace Prices.Web.Client.Pages.ItemPrices
 //            LineChartJs.Reload();
         }
 
+        protected override Task OnAfterRenderAsync()
+        {
+            LineChartJs.Reload();
+
+            return base.OnAfterRenderAsync();
+        }
+
         private async Task<LineChartConfig> BuildChartConfig(HttpResponseMessage responseMessage)
         {
             var contentString = await responseMessage.Content.ReadAsStringAsync();
