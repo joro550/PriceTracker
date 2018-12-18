@@ -32,6 +32,20 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
         }
 
         [Fact]
+        public async Task WhenPasswordsDontMatch_ThenBadRequestIsReturned()
+        {
+            var webApplication = _fixture
+                .WithUserRepository(FakeUserRepository.WithNoRecords())
+                .Build();
+
+            var createUserModel = new CreateUserModel
+                { Username = "username", Password = "password1", VerifyPassword = "password2" };
+
+            var response = await webApplication.PostAsJsonAsync("/api/user/create", createUserModel);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
         public async Task WhenUsernameAllReadyExists_ThenBadRequestIsReturned()
         {
             var webApplication = _fixture
@@ -47,5 +61,29 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
             var response = await webApplication.PostAsJsonAsync("/api/user/create", createUserModel);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
-    }
+
+        [Fact]
+        public async Task WhenValidUserIsRequestedToBeAdded_ThenOkIsReturnedAndUserIsSavedToDatabase()
+        {
+            var userRepository = FakeUserRepository.WithNoRecords();
+            var webApplication = _fixture
+                .WithUserRepository(userRepository)
+                .Build();
+
+            var createUserModel = new CreateUserModel
+            {
+                Username = FakeUserRepository.NormalUser.Username,
+                Password = FakeUserRepository.NormalUser.OriginalPassword,
+                VerifyPassword = FakeUserRepository.NormalUser.OriginalPassword
+            };
+
+            var response = await webApplication.PostAsJsonAsync("/api/user/create", createUserModel);
+            var user = await userRepository.GetByUsername(FakeUserRepository.NormalUser.Username);
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            Assert.NotNull(user);
+            Assert.Equal(FakeUserRepository.NormalUser.Username, user.Username);
+        }
+    } 
 }

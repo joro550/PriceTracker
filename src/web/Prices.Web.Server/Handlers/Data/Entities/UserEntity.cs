@@ -8,6 +8,9 @@ namespace Prices.Web.Server.Handlers.Data.Entities
         public string Username { get; set; }
         public string Password { get; set; }
         public string PasswordSalt { get; set; }
+
+        public bool IsValidUser() 
+            => !string.IsNullOrEmpty(Id);
     }
     
     public class NullUserEntity : UserEntity

@@ -24,7 +24,7 @@ namespace Prices.Web.Server.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UserModel user)
         {
-            if (!await ValidateModel(user))
+            if (!await ValidateLogin(user))
                 return BadRequest();
             
             var userEntity = await _mediator.Send(new GetUserByUsernameRequest {Username = user.Username});
@@ -36,10 +36,20 @@ namespace Prices.Web.Server.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserModel createUser)
         {
-            return BadRequest();
+            var validationResult = new CreateUserValidator().Validate(createUser);
+            if (!validationResult.IsValid)
+                return BadRequest();
+
+            var userEntity = await _mediator.Send(new GetUserByUsernameRequest {Username = createUser.Username});
+            if (userEntity.IsValidUser())
+                return BadRequest();
+
+            await _mediator.Send(new CreateUserRequest
+                {Username = createUser.Username, Password = createUser.Password});
+            return Ok();
         }
 
-        private static async Task<bool> ValidateModel(UserModel user)
+        private static async Task<bool> ValidateLogin(UserModel user)
         {
             var validationResult = await new UserModelValidator()
                 .ValidateAsync(user);
