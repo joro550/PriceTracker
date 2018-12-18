@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Prices.Web.Server.Identity;
 using Prices.Web.Server.Tests.Fakes;
 using Prices.Web.Shared.Models.Users;
 
@@ -80,7 +81,12 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
             var response = await webApplication.PostAsJsonAsync("/api/user/create", createUserModel);
             var user = await userRepository.GetByUsername(FakeUserRepository.NormalUser.Username);
 
+            var cipher = new CipherService();
+            var canValidatePassword = cipher.ValidatePasswordAgainstHash(FakeUserRepository.NormalUser.OriginalPassword,
+                user.PasswordSalt, user.Password);
+
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(canValidatePassword);
 
             Assert.NotNull(user);
             Assert.Equal(FakeUserRepository.NormalUser.Username, user.Username);

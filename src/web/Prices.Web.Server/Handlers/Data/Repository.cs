@@ -9,7 +9,7 @@ namespace Prices.Web.Server.Handlers.Data
     {
         Task<List<T>> GetAll();
         Task<List<T>> ByPartitionKey(string value);
-        Task Add(T item);
+        Task<bool> Add(T item);
     }
 
     public class Repository<T> : IRepository<T> where T : TableEntity, new()
@@ -37,9 +37,10 @@ namespace Prices.Web.Server.Handlers.Data
             return results.Results.OrderBy(result => result.Timestamp).ToList();
         }
 
-        public async Task Add(T item)
+        public async Task<bool> Add(T item)
         {
-            await TableClient.ExecuteAsync(TableOperation.Insert(item));
+            var tableResult = await TableClient.ExecuteAsync(TableOperation.Insert(item));
+            return tableResult.Result != null;
         }
     }
 }

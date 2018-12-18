@@ -39,12 +39,6 @@ namespace Prices.Web.Server.Tests.Fakes
 
         public Task<UserEntity> GetById(string userId)
             => Task.FromResult(Items.FirstOrDefault(entity => entity.Id == userId));
-
-        public Task<bool> Create(UserEntity userEntity)
-        {
-            Items.Add(userEntity);
-            return Task.FromResult(true);
-        }
     }
 
     public class TestUserEntity : UserEntity

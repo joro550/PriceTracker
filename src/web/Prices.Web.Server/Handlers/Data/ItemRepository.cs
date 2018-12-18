@@ -9,7 +9,7 @@ namespace Prices.Web.Server.Handlers.Data
     {
         Task<List<ItemEntity>> GetAll();
         Task<List<ItemEntity>> ByPartitionKey(string value);
-        Task Add(ItemEntity itemEntity);
+        Task<bool> Add(ItemEntity itemEntity);
     }
 
     public class ItemRepository : Repository<ItemEntity>, IItemRepository

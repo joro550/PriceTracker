@@ -10,10 +10,9 @@ namespace Prices.Web.Server.Handlers.Data
     {
         Task<List<UserEntity>> GetAll();
         Task<List<UserEntity>> ByPartitionKey(string value);
-        Task Add(UserEntity itemEntity);
+        Task<bool> Add(UserEntity itemEntity);
         Task<UserEntity> GetByUsername(string userUserName);
         Task<UserEntity> GetById(string userId);
-        Task<bool> Create(UserEntity userEntity);
     }
     
     public class UserRepository : Repository<UserEntity>, IUserRepository
@@ -37,11 +36,6 @@ namespace Prices.Web.Server.Handlers.Data
                 .Where(TableQuery.GenerateFilterCondition(nameof(UserEntity.Id), QueryComparisons.Equal, userId));
             var results = await TableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
             return results.Results.SingleOrDefault();
-        }
-
-        public Task<bool> Create(UserEntity userEntity)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

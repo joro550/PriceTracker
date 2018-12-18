@@ -2,6 +2,7 @@
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Prices.Web.Server.Handlers.Data;
 using Prices.Web.Server.Handlers.Requests;
 using Prices.Web.Server.Handlers.Data.Entities;
@@ -13,9 +14,13 @@ namespace Prices.Web.Server.Handlers
           IRequestHandler<CreateUserRequest, bool>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserHandler(IUserRepository userRepository) 
-            => _userRepository = userRepository;
+        public UserHandler(IUserRepository userRepository, IMapper mapper)
+        {
+            _userRepository = userRepository;
+            _mapper = mapper;
+        }
 
         public async Task<UserEntity> Handle(GetUserByUsernameRequest byUsernameRequest, CancellationToken cancellationToken)
         {
@@ -23,15 +28,7 @@ namespace Prices.Web.Server.Handlers
             return userEntity ?? new NullUserEntity();
         }
 
-        public async Task<bool> Handle(CreateUserRequest request, CancellationToken cancellationToken)
-        {
-            return await _userRepository.Create(new UserEntity
-            {
-                PartitionKey = "",
-                RowKey = Guid.NewGuid().ToString("N"),
-                Username = request.Username,
-                PasswordSalt = request.PasswordSalt
-            });
-        }
+        public async Task<bool> Handle(CreateUserRequest request, CancellationToken cancellationToken) 
+            => await _userRepository.Add(_mapper.Map<UserEntity>(request));
     }
 }

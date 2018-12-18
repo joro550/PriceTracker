@@ -19,7 +19,11 @@ namespace Prices.Web.Server.Tests.Fakes
         public Task<List<T>> ByPartitionKey(string value) 
             => Task.FromResult(Items.Where(item => item.PartitionKey == value).ToList());
 
-        public Task Add(T item) 
-            => Task.Run(() => Items.Add(item));
+        public Task<bool> Add(T item) 
+            => Task.Run(() =>
+            {
+                Items.Add(item);
+                return true;
+            });
     }
 }

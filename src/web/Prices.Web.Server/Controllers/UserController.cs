@@ -44,8 +44,14 @@ namespace Prices.Web.Server.Controllers
             if (userEntity.IsValidUser())
                 return BadRequest();
 
+            var passwordGenerationResult = _cipherService.GeneratePassword(createUser.Password);
+
             await _mediator.Send(new CreateUserRequest
-                {Username = createUser.Username, Password = createUser.Password});
+            {
+                Username = createUser.Username,
+                Password = passwordGenerationResult.HashedPassword,
+                PasswordSalt = passwordGenerationResult.PasswordSalt
+            });
             return Ok();
         }
 
