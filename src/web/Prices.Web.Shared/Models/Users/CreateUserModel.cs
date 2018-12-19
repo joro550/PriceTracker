@@ -15,7 +15,7 @@ namespace Prices.Web.Shared.Models.Users
         {
             RuleFor(prop => prop.Username).NotEmpty().NotNull();
             RuleFor(prop => prop.Password).NotEmpty().NotNull();
-            RuleFor(prop => prop.VerifyPassword).NotEmpty().NotNull().Matches(m => m.Password);
+            RuleFor(prop => prop.VerifyPassword).NotEmpty().NotNull().Equal(m => m.Password);
         }
     }
 }
