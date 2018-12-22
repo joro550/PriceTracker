@@ -1,8 +1,7 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
+using AutoMapper;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Prices.Web.Server.Handlers.Data;
 using Prices.Web.Server.Handlers.Requests;
 using Prices.Web.Server.Handlers.Data.Entities;

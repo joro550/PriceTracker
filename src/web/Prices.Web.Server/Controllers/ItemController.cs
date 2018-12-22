@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using AutoMapper;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Prices.Web.Server.Handlers.Data;
+using System.Collections.Generic;
 using Prices.Web.Shared.Models.Home;
+using Prices.Web.Shared.Models.Items;
+using Prices.Web.Server.Handlers.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Prices.Web.Server.Controllers
 {
@@ -18,6 +20,12 @@ namespace Prices.Web.Server.Controllers
         {
             _repository = repository;
             _mapper = mapper;
+        }
+
+        [HttpPost("create"), Authorize]
+        public async Task<IActionResult> CreateItem([FromBody]AddItemModel model)
+        {
+            return BadRequest();
         }
 
 //        [HttpPost]

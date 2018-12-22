@@ -1,7 +1,11 @@
-﻿using Xunit;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using FluentValidation.Results;
+using Newtonsoft.Json;
 using Prices.Web.Server.Identity;
 using Prices.Web.Server.Tests.Fakes;
 using Prices.Web.Shared.Models.Users;
@@ -43,7 +47,12 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
                 { Username = "username", Password = "password1", VerifyPassword = "password2" };
 
             var response = await webApplication.PostAsJsonAsync("/api/user/create", createUserModel);
+            var value = await response.Content.ReadAsStringAsync();
+            var validationFailures = JsonConvert.DeserializeObject<List<ValidationFailure>>(value);
+
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Contains("'Verify Password' should be equal to 'password1'.", 
+                validationFailures.Select(failure => failure.ErrorMessage));
         }
 
         [Fact]

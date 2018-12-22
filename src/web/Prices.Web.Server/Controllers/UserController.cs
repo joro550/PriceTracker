@@ -24,11 +24,15 @@ namespace Prices.Web.Server.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]UserModel user)
         {
-            if (!await ValidateLogin(user))
+            var validationResult = await new UserModelValidator().ValidateAsync(user);
+            if (!validationResult.IsValid)
                 return BadRequest();
             
             var userEntity = await _mediator.Send(new GetUserByUsernameRequest {Username = user.Username});
-            if (_cipherService.ValidatePasswordAgainstHash(user.Password, userEntity.PasswordSalt, userEntity.Password))
+            var validatePasswordAgainstHash =
+                _cipherService.ValidatePasswordAgainstHash(user.Password, userEntity.PasswordSalt, userEntity.Password);
+
+            if (validatePasswordAgainstHash)
                 return Ok(new TokenResult { Token = _tokenService.BuildToken(user.Username)});
             return BadRequest();
         }
@@ -38,7 +42,7 @@ namespace Prices.Web.Server.Controllers
         {
             var validationResult = new CreateUserValidator().Validate(createUser);
             if (!validationResult.IsValid)
-                return BadRequest();
+                return BadRequest(validationResult.Errors);
 
             var userEntity = await _mediator.Send(new GetUserByUsernameRequest {Username = createUser.Username});
             if (userEntity.IsValidUser())
@@ -53,13 +57,6 @@ namespace Prices.Web.Server.Controllers
                 PasswordSalt = passwordGenerationResult.PasswordSalt
             });
             return Ok();
-        }
-
-        private static async Task<bool> ValidateLogin(UserModel user)
-        {
-            var validationResult = await new UserModelValidator()
-                .ValidateAsync(user);
-            return validationResult.IsValid;
         }
     }
 }
