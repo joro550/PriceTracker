@@ -19,7 +19,6 @@ namespace Prices.Web.Server
                 .AfterMap((createRequest, userEntity) =>
                 {
                     var partitionKey = Guid.NewGuid().ToString("N");
-
                     userEntity.Id = partitionKey;
                     userEntity.PartitionKey = partitionKey;
                     userEntity.RowKey = Guid.NewGuid().ToString("N");

@@ -7,6 +7,7 @@ using Prices.Web.Shared.Models.Home;
 using Prices.Web.Shared.Models.Items;
 using Prices.Web.Server.Handlers.Data;
 using Microsoft.AspNetCore.Authorization;
+using Prices.Web.Server.Handlers.Data.Entities;
 
 namespace Prices.Web.Server.Controllers
 {
@@ -22,27 +23,18 @@ namespace Prices.Web.Server.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("create"), Authorize]
+        [Authorize, HttpPost("create")]
         public async Task<IActionResult> CreateItem([FromBody]AddItemModel model)
         {
-            return BadRequest();
-        }
+            var validator = new ItemModelValidator();
+            var validationResult = await validator.ValidateAsync(model);
 
-//        [HttpPost]
-//        public async Task<ActionResult> Add(AddItemModel addItemModel)
-//        {
-//            var validator = new ItemModelValidator();
-//            var validationResult = validator.Validate(addItemModel);
-//
-//            if (!validationResult.IsValid)
-//            {
-//                addItemModel.Errors = validationResult.Errors;
-//                return Ok(addItemModel);
-//            }
-//
-//            await _repository.Add(_mapper.Map<ItemEntity>(addItemModel));
-//            return Ok(new AddItemModel {Success = true});
-//        }
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
+
+            await _repository.Add(_mapper.Map<ItemEntity>(model));
+            return Ok();
+        }
 
         [Route("")]
         public async Task<IActionResult> GetAllItems()
