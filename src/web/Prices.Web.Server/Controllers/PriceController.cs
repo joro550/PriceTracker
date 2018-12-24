@@ -11,8 +11,10 @@ namespace Prices.Web.Server.Controllers
     {
         private readonly IItemPriceRepository _itemPriceRepository;
 
-        public PriceController(IItemPriceRepository itemPriceRepository) 
-            => _itemPriceRepository = itemPriceRepository;
+        public PriceController(IItemPriceRepository itemPriceRepository)
+        {
+            _itemPriceRepository = itemPriceRepository;
+        }
 
         [Route("ChartData")]
         public async Task<IActionResult> PriceChartData()

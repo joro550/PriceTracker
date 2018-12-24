@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using Prices.Web.Client.Tests.Fakes;
 
-namespace Prices.Web.Client.Tests.Pages.Items
+namespace Prices.Web.Client.Tests.Pages.Items.ListItems
 {
     public class ListItemComponentBuilder
     {

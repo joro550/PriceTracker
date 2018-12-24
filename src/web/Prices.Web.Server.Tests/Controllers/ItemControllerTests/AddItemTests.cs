@@ -1,23 +1,35 @@
 ﻿using Xunit;
 using System.Net;
 using System.Linq;
-using System.Net.Http;
 using Newtonsoft.Json;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentValidation.Results;
 using System.Collections.Generic;
-using Prices.Web.Server.Handlers.Data;
 using Prices.Web.Server.Tests.Fakes;
 using Prices.Web.Shared.Models.Items;
+using Prices.Web.Server.Handlers.Data;
 
 namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
 {
     public class AddItemTests : IClassFixture<WebApplicationFixture>
     {
+        public AddItemTests(WebApplicationFixture fixture)
+        {
+            _fixture = fixture.ApplicationBuilder;
+        }
+
         private readonly WebApplicationBuilder _fixture;
 
-        public AddItemTests(WebApplicationFixture fixture)
-            => _fixture = fixture.ApplicationBuilder;
+        private async Task<HttpResponseMessage> CreateItem(IItemRepository fakeItemRepository, AddItemModel itemModel)
+        {
+            return await _fixture
+                .WithUserRepository(FakeUserRepository.WithDefaultUsers())
+                .WithItemRepository(fakeItemRepository)
+                .Build()
+                .AuthorizeWith(FakeUserRepository.NormalUser)
+                .PostAsJsonAsync("/api/items/create", itemModel);
+        }
 
         [Fact]
         public async Task WhenAnUnauthorizedUserTriesToAddAnItem_ThenUnauthorizedIsReturned()
@@ -71,12 +83,5 @@ namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
             Assert.Single(allItems);
             Assert.NotNull(allItems.Select(item => item.Id == id));
         }
-
-        private async Task<HttpResponseMessage> CreateItem(IItemRepository fakeItemRepository, AddItemModel itemModel) => await _fixture
-            .WithUserRepository(FakeUserRepository.WithDefaultUsers())
-            .WithItemRepository(fakeItemRepository)
-            .Build()
-            .AuthorizeWith(FakeUserRepository.NormalUser)
-            .PostAsJsonAsync("/api/items/create", itemModel);
     }
 }

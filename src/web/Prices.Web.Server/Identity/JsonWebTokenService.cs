@@ -23,23 +23,35 @@ namespace Prices.Web.Server.Identity
             _tokenHandler = tokenHandler;
         }
 
-        public string BuildToken(string email) 
-            => _tokenHandler.WriteToken(CreateToken(email));
-
-        private JwtSecurityToken CreateToken(string email) => new JwtSecurityToken(_configuration.Issuer, _configuration.Audience, Claims(email),
-            expires: DateTime.Now.AddMinutes(_configuration.ExpiryMinutesToAdd),
-            signingCredentials: Credentials());
-
-        private SigningCredentials Credentials() => 
-            new SigningCredentials(CreateKey(), SecurityAlgorithms.HmacSha256);
-
-        private SymmetricSecurityKey CreateKey() => 
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Key));
-
-        private static IEnumerable<Claim> Claims(string email) => new[]
+        public string BuildToken(string email)
         {
-            new Claim(JwtRegisteredClaimNames.Email, email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+            return _tokenHandler.WriteToken(CreateToken(email));
+        }
+
+        private JwtSecurityToken CreateToken(string email)
+        {
+            return new JwtSecurityToken(_configuration.Issuer, _configuration.Audience, Claims(email),
+                expires: DateTime.Now.AddMinutes(_configuration.ExpiryMinutesToAdd),
+                signingCredentials: Credentials());
+        }
+
+        private SigningCredentials Credentials()
+        {
+            return new SigningCredentials(CreateKey(), SecurityAlgorithms.HmacSha256);
+        }
+
+        private SymmetricSecurityKey CreateKey()
+        {
+            return new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Key));
+        }
+
+        private static IEnumerable<Claim> Claims(string email)
+        {
+            return new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+        }
     }
 }

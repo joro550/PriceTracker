@@ -1,4 +1,5 @@
 using Blazor.Extensions.Logging;
+using BlazorState;
 using Microsoft.AspNetCore.Blazor.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ namespace Prices.Web.Client
             services.AddLogging(builder => builder
                 .AddBrowserConsole()
                 .SetMinimumLevel(LogLevel.Trace));
+            services.AddBlazorState();
         }
 
         public void Configure(IBlazorApplicationBuilder app)

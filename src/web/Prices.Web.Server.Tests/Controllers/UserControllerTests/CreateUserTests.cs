@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Xunit;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,15 +8,18 @@ using Newtonsoft.Json;
 using Prices.Web.Server.Identity;
 using Prices.Web.Server.Tests.Fakes;
 using Prices.Web.Shared.Models.Users;
+using Xunit;
 
 namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
 {
     public class CreateUserTests : IClassFixture<WebApplicationFixture>
     {
-        private readonly WebApplicationBuilder _fixture;
-
         public CreateUserTests(WebApplicationFixture fixture)
-            => _fixture = fixture.ApplicationBuilder;
+        {
+            _fixture = fixture.ApplicationBuilder;
+        }
+
+        private readonly WebApplicationBuilder _fixture;
 
         [Theory]
         [InlineData("", "")]
@@ -44,14 +46,14 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
                 .Build();
 
             var createUserModel = new CreateUserModel
-                { Username = "username", Password = "password1", VerifyPassword = "password2" };
+                {Username = "username", Password = "password1", VerifyPassword = "password2"};
 
             var response = await webApplication.PostAsJsonAsync("/api/user/create", createUserModel);
             var value = await response.Content.ReadAsStringAsync();
             var validationFailures = JsonConvert.DeserializeObject<List<ValidationFailure>>(value);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Contains("'Verify Password' should be equal to 'password1'.", 
+            Assert.Contains("'Verify Password' should be equal to 'password1'.",
                 validationFailures.Select(failure => failure.ErrorMessage));
         }
 
@@ -100,5 +102,5 @@ namespace Prices.Web.Server.Tests.Controllers.UserControllerTests
             Assert.NotNull(user);
             Assert.Equal(FakeUserRepository.NormalUser.Username, user.Username);
         }
-    } 
+    }
 }

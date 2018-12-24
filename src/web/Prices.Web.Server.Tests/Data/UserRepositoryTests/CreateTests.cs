@@ -11,14 +11,31 @@ namespace Prices.Web.Server.Tests.Data.UserRepositoryTests
 {
     public class CreateTests : IDisposable
     {
-        private readonly FakeTableStorageClient _fakeTableStorageClient;
-
-        public CreateTests() => _fakeTableStorageClient = FakeStorageAccount
-            .DevelopmentStorageAccount
-            .CreateCloudTableClient();
+        public CreateTests()
+        {
+            _fakeTableStorageClient = FakeStorageAccount
+                .DevelopmentStorageAccount
+                .CreateCloudTableClient();
+        }
 
         public void Dispose()
-            => _fakeTableStorageClient.DeleteCreatedTables();
+        {
+            _fakeTableStorageClient.DeleteCreatedTables();
+        }
+
+        private readonly FakeTableStorageClient _fakeTableStorageClient;
+
+        private static UserEntity CreateUser(string username, string id = "B07")
+        {
+            return new UserEntity
+            {
+                Id = id,
+                PartitionKey = "B07",
+                RowKey = "B07",
+                Username = username,
+                Password = "password"
+            };
+        }
 
 
         [Fact]
@@ -36,14 +53,5 @@ namespace Prices.Web.Server.Tests.Data.UserRepositoryTests
                 .Including(prop => prop.Username)
                 .Including(prop => prop.Password));
         }
-
-        private static UserEntity CreateUser(string username, string id = "B07") => new UserEntity
-        {
-            Id = id,
-            PartitionKey = "B07",
-            RowKey = "B07",
-            Username = username,
-            Password = "password",
-        };
     }
 }

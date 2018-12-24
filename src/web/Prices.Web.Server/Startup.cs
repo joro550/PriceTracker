@@ -23,8 +23,10 @@ namespace Prices.Web.Server
     {
         private readonly IConfiguration _configuration;
 
-        public Startup(IConfiguration configuration) 
-            => _configuration = configuration;
+        public Startup(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
 
         public void ConfigureServices(IServiceCollection services)
@@ -32,10 +34,7 @@ namespace Prices.Web.Server
             var webTokenConfig = JsonWebTokenConfiguration.FromConfiguration(_configuration);
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-            });
+            services.Configure<CookiePolicyOptions>(options => { options.CheckConsentNeeded = context => true; });
 
             services.AddAuthentication(options =>
                 {
@@ -60,7 +59,7 @@ namespace Prices.Web.Server
             {
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
                 {
-                    MediaTypeNames.Application.Octet, 
+                    MediaTypeNames.Application.Octet,
                     WasmMediaTypeNames.Application.Wasm
                 });
             });

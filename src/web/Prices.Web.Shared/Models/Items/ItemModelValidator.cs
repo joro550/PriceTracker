@@ -15,7 +15,9 @@ namespace Prices.Web.Shared.Models.Items
                 .WithMessage("Please specify a known retailer");
         }
 
-        private static bool BeAKnownRetailer(IEnumerable<SelectListItem> knownRetailers, string retailerValue) 
-            => knownRetailers.Select(retailer => retailer.Value).Contains(retailerValue);
+        private static bool BeAKnownRetailer(IEnumerable<SelectListItem> knownRetailers, string retailerValue)
+        {
+            return knownRetailers.Select(retailer => retailer.Value).Contains(retailerValue);
+        }
     }
 }

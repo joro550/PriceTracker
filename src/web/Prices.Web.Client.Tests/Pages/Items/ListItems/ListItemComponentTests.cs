@@ -6,14 +6,16 @@ using Prices.Web.Client.Tests.Fakes;
 using Prices.Web.Shared.Models.Home;
 using Xunit;
 
-namespace Prices.Web.Client.Tests.Pages.Items
+namespace Prices.Web.Client.Tests.Pages.Items.ListItems
 {
     public class ListItemComponentTests
     {
-        private readonly ListItemComponentBuilder _componentBuilder;
+        public ListItemComponentTests()
+        {
+            _componentBuilder = new ListItemComponentBuilder();
+        }
 
-        public ListItemComponentTests() 
-            => _componentBuilder = new ListItemComponentBuilder();
+        private readonly ListItemComponentBuilder _componentBuilder;
 
         [Theory]
         [AutoData]

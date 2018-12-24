@@ -8,6 +8,11 @@ namespace Prices.Web.Server.Tests.Fakes
 {
     public class FakeUserRepository : InMemoryRepository<UserEntity>, IUserRepository
     {
+        private FakeUserRepository(List<UserEntity> items)
+            : base(items)
+        {
+        }
+
         public static TestUserEntity NormalUser
             => new TestUserEntity
             {
@@ -18,27 +23,30 @@ namespace Prices.Web.Server.Tests.Fakes
                 OriginalPassword = "password"
             };
 
-        private static List<UserEntity> DefaultUsers =>  new List<UserEntity>
+        private static List<UserEntity> DefaultUsers => new List<UserEntity>
         {
             NormalUser
         };
-        
-        private FakeUserRepository(List<UserEntity> items) 
-            : base(items)
+
+        public Task<UserEntity> GetByUsername(string userUserName)
         {
+            return Task.FromResult(Items.FirstOrDefault(entity => entity.Username == userUserName));
         }
 
-        public static FakeUserRepository WithNoRecords() 
-            => new FakeUserRepository(new List<UserEntity>());
-
-        public static FakeUserRepository WithDefaultUsers() 
-            => new FakeUserRepository(DefaultUsers);
-
-        public Task<UserEntity> GetByUsername(string userUserName) 
-            => Task.FromResult(Items.FirstOrDefault(entity => entity.Username == userUserName));
-
         public Task<UserEntity> GetById(string userId)
-            => Task.FromResult(Items.FirstOrDefault(entity => entity.Id == userId));
+        {
+            return Task.FromResult(Items.FirstOrDefault(entity => entity.Id == userId));
+        }
+
+        public static FakeUserRepository WithNoRecords()
+        {
+            return new FakeUserRepository(new List<UserEntity>());
+        }
+
+        public static FakeUserRepository WithDefaultUsers()
+        {
+            return new FakeUserRepository(DefaultUsers);
+        }
     }
 
     public class TestUserEntity : UserEntity

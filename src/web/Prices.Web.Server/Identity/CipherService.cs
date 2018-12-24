@@ -12,8 +12,10 @@ namespace Prices.Web.Server.Identity
     {
         private readonly ICryptoService _cryptoService;
 
-        public CipherService() 
-            => _cryptoService = new PBKDF2();
+        public CipherService()
+        {
+            _cryptoService = new PBKDF2();
+        }
 
         public bool ValidatePasswordAgainstHash(string password, string salt, string knownHash)
         {

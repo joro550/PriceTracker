@@ -14,15 +14,51 @@ namespace Prices.Web.Client.Tests.Pages.ItemPrices
 {
     public class PriceChartComponentTests
     {
+        public PriceChartComponentTests()
+        {
+            _builder = new PriceChartComponentBuilder();
+        }
+
         private readonly PriceChartComponentBuilder _builder;
 
-        public PriceChartComponentTests() 
-            => _builder = new PriceChartComponentBuilder();
+        [Fact]
+        public async Task WhenChartDataIsValid_ThenDataSetHasBeenLoaded()
+        {
+            var chartData = new ChartData {Labels = new List<string> {"1", "2", "3"}};
+            chartData.DataSets.Add(new ChatDataSets {Label = "1", Data = new List<string> {"5", "6", "7"}});
+
+            var component = _builder
+                .WithMessageHandler(FakeHttpMessageHandler.WithResult(chartData))
+                .Build();
+            await component.InitAsync();
+
+            var config = component.GetChartConfig();
+            Assert.Equal(new List<object> {"5", "6", "7"}, config.Data.Datasets.First().Data);
+        }
+
+        [Fact]
+        public async Task WhenChartDataIsValid_ThenLabelsAreLoaded()
+        {
+            var chartData = new ChartData
+            {
+                Labels = new List<string> {"1", "2", "3"}
+            };
+
+            var component = _builder
+                .WithMessageHandler(FakeHttpMessageHandler.WithResult(chartData))
+                .Build();
+            await component.InitAsync();
+
+            var config = component.GetChartConfig();
+            Assert.Contains("1", config.Data.Labels);
+            Assert.Contains("2", config.Data.Labels);
+            Assert.Contains("3", config.Data.Labels);
+        }
 
         [Fact]
         public async Task WhenInitializing_ComponentMakesCallToGetPrices()
         {
-            var messageHandler = FakeHttpMessageHandler.WithNoCotentResult();
+            var messageHandler = FakeHttpMessageHandler.WithNoContentResult();
             var component = _builder
                 .WithMessageHandler(messageHandler)
                 .Build();
@@ -37,40 +73,6 @@ namespace Prices.Web.Client.Tests.Pages.ItemPrices
             await component.InitAsync();
             Assert.NotNull(component.GetChartConfig());
         }
-
-        [Fact]
-        public async Task WhenChartDataIsValid_ThenLabelsAreLoaded()
-        {
-            var chartData = new ChartData
-            {
-                Labels = new List<string> {"1", "2", "3"}
-            };
-            
-            var component = _builder
-                .WithMessageHandler(FakeHttpMessageHandler.WithResult(chartData))
-                .Build();
-            await component.InitAsync();
-            
-            var config = component.GetChartConfig();
-            Assert.Contains("1", config.Data.Labels);
-            Assert.Contains("2", config.Data.Labels);
-            Assert.Contains("3", config.Data.Labels);
-        }
-
-        [Fact]
-        public async Task WhenChartDataIsValid_ThenDataSetHasBeenLoaded()
-        {
-            var chartData = new ChartData {Labels = new List<string> {"1", "2", "3"}};
-            chartData.DataSets.Add(new ChatDataSets {Label = "1", Data = new List<string> {"5", "6", "7"}});
-            
-            var component = _builder
-                .WithMessageHandler(FakeHttpMessageHandler.WithResult(chartData))
-                .Build();
-            await component.InitAsync();
-            
-            var config = component.GetChartConfig();
-            Assert.Equal(new List<object> {"5", "6", "7"}, config.Data.Datasets.First().Data);
-        }
     }
 
     public class PriceChartComponentWrapper : PriceChartComponent
@@ -81,27 +83,35 @@ namespace Prices.Web.Client.Tests.Pages.ItemPrices
             Logger = logger;
         }
 
-        public async Task InitAsync() 
-            => await OnInitAsync();
-
-        public LineChartConfig GetChartConfig() 
-            => ChartConfig;
-    }
-
-    public class FakeLogger<T> :ILogger<T>
-    {
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public async Task InitAsync()
         {
-            
+            await OnInitAsync();
         }
 
-        public bool IsEnabled(LogLevel logLevel) 
-            => true;
-
-        public IDisposable BeginScope<TState>(TState state) 
-            => null;
+        public LineChartConfig GetChartConfig()
+        {
+            return ChartConfig;
+        }
     }
-    
+
+    public class FakeLogger<T> : ILogger<T>
+    {
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
+            Func<TState, Exception, string> formatter)
+        {
+        }
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            return true;
+        }
+
+        public IDisposable BeginScope<TState>(TState state)
+        {
+            return null;
+        }
+    }
+
     public class PriceChartComponentBuilder
     {
         private HttpClient _client;

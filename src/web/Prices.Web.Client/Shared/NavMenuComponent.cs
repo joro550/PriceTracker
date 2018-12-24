@@ -6,10 +6,14 @@ namespace Prices.Web.Client.Shared
     {
         private bool _collapseNavMenu;
 
-        protected void ToggleNavMenu() 
-            => _collapseNavMenu = !_collapseNavMenu;
+        protected void ToggleNavMenu()
+        {
+            _collapseNavMenu = !_collapseNavMenu;
+        }
 
-        protected string NavMenuClass() 
-            => _collapseNavMenu ? "collapse" : null;
+        protected string NavMenuClass()
+        {
+            return _collapseNavMenu ? "collapse" : null;
+        }
     }
 }

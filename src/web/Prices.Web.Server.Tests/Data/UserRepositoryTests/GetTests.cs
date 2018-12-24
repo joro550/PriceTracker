@@ -1,27 +1,44 @@
-using Xunit;
 using System;
 using System.Linq;
-using FluentAssertions;
-using AutoFixture.Xunit2;
 using System.Threading.Tasks;
-using Prices.Web.Server.Tests.Fakes;
+using AutoFixture.Xunit2;
+using FluentAssertions;
 using Prices.Web.Server.Handlers.Data;
 using Prices.Web.Server.Handlers.Data.Entities;
+using Prices.Web.Server.Tests.Fakes;
+using Xunit;
 
 namespace Prices.Web.Server.Tests.Data.UserRepositoryTests
 {
     public class GetTests
     {
+        private static UserEntity CreateUser(string username, string id = "B07")
+        {
+            return new UserEntity
+            {
+                Id = id,
+                PartitionKey = "B07",
+                RowKey = "B07",
+                Username = username,
+                Password = "password"
+            };
+        }
+
         public class GetAllTests : IDisposable
         {
+            public GetAllTests()
+            {
+                _fakeTableStorageClient = FakeStorageAccount
+                    .DevelopmentStorageAccount
+                    .CreateCloudTableClient();
+            }
+
+            public void Dispose()
+            {
+                _fakeTableStorageClient.DeleteCreatedTables();
+            }
+
             private readonly FakeTableStorageClient _fakeTableStorageClient;
-
-            public GetAllTests() => _fakeTableStorageClient = FakeStorageAccount
-                .DevelopmentStorageAccount
-                .CreateCloudTableClient();
-
-            public void Dispose() 
-                => _fakeTableStorageClient.DeleteCreatedTables();
 
             [Fact]
             public async Task WhenStoreHasNoRecords_EmptyListIsReturned()
@@ -46,17 +63,22 @@ namespace Prices.Web.Server.Tests.Data.UserRepositoryTests
                     .Including(prop => prop.Password));
             }
         }
-        
+
         public class GetByUsernameTests : IDisposable
         {
+            public GetByUsernameTests()
+            {
+                _fakeTableStorageClient = FakeStorageAccount
+                    .DevelopmentStorageAccount
+                    .CreateCloudTableClient();
+            }
+
+            public void Dispose()
+            {
+                _fakeTableStorageClient.DeleteCreatedTables();
+            }
+
             private readonly FakeTableStorageClient _fakeTableStorageClient;
-
-            public GetByUsernameTests() => _fakeTableStorageClient = FakeStorageAccount
-                .DevelopmentStorageAccount
-                .CreateCloudTableClient();
-
-            public void Dispose() 
-                => _fakeTableStorageClient.DeleteCreatedTables();
 
             [Fact]
             public async Task WhenStoreHasNoRecords_NullRecordIsReturned()
@@ -74,7 +96,7 @@ namespace Prices.Web.Server.Tests.Data.UserRepositoryTests
                 var user = CreateUser(username);
                 await userRepository.Add(user);
                 var usersFromStore = await userRepository.GetByUsername(username);
-                
+
                 usersFromStore.Should().BeEquivalentTo(user, options => options
                     .Including(prop => prop.Id)
                     .Including(prop => prop.PartitionKey)
@@ -82,17 +104,38 @@ namespace Prices.Web.Server.Tests.Data.UserRepositoryTests
                     .Including(prop => prop.Password));
             }
         }
-        
+
         public class GetByIdTests : IDisposable
         {
+            public GetByIdTests()
+            {
+                _fakeTableStorageClient = FakeStorageAccount
+                    .DevelopmentStorageAccount
+                    .CreateCloudTableClient();
+            }
+
+            public void Dispose()
+            {
+                _fakeTableStorageClient.DeleteCreatedTables();
+            }
+
             private readonly FakeTableStorageClient _fakeTableStorageClient;
 
-            public GetByIdTests() => _fakeTableStorageClient = FakeStorageAccount
-                .DevelopmentStorageAccount
-                .CreateCloudTableClient();
+            [Theory]
+            [AutoData]
+            public async Task WhenStoreHasRecords_ExpectedRecordIsReturned(string id)
+            {
+                var userRepository = new UserRepository(_fakeTableStorageClient);
+                var user = CreateUser("username", id);
+                await userRepository.Add(user);
+                var usersFromStore = await userRepository.GetById(id);
 
-            public void Dispose() 
-                => _fakeTableStorageClient.DeleteCreatedTables();
+                usersFromStore.Should().BeEquivalentTo(user, options => options
+                    .Including(prop => prop.Id)
+                    .Including(prop => prop.PartitionKey)
+                    .Including(prop => prop.Username)
+                    .Including(prop => prop.Password));
+            }
 
             [Fact]
             public async Task WhenStoreHasNoRecords_NullRecordIsReturned()
@@ -101,30 +144,6 @@ namespace Prices.Web.Server.Tests.Data.UserRepositoryTests
                 var userEntity = await userRepository.GetById(string.Empty);
                 Assert.Null(userEntity);
             }
-
-            [Theory, AutoData]
-            public async Task WhenStoreHasRecords_ExpectedRecordIsReturned(string id)
-            {
-                var userRepository = new UserRepository(_fakeTableStorageClient);
-                var user = CreateUser("username", id);
-                await userRepository.Add(user);
-                var usersFromStore = await userRepository.GetById(id);
-                
-                usersFromStore.Should().BeEquivalentTo(user, options => options
-                    .Including(prop => prop.Id)
-                    .Including(prop => prop.PartitionKey)
-                    .Including(prop => prop.Username)
-                    .Including(prop => prop.Password));
-            }
         }
-        
-        private static UserEntity CreateUser(string username, string id = "B07") => new UserEntity
-        {
-            Id = id,
-            PartitionKey = "B07",
-            RowKey = "B07",
-            Username = username,
-            Password = "password",
-        };
     }
 }

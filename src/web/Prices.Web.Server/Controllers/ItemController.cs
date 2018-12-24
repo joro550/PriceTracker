@@ -1,17 +1,18 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+using Prices.Web.Server.Handlers.Data;
+using Prices.Web.Server.Handlers.Data.Entities;
 using Prices.Web.Shared.Models.Home;
 using Prices.Web.Shared.Models.Items;
-using Prices.Web.Server.Handlers.Data;
-using Microsoft.AspNetCore.Authorization;
-using Prices.Web.Server.Handlers.Data.Entities;
 
 namespace Prices.Web.Server.Controllers
 {
-    [ApiController, Route("/api/items")]
+    [ApiController]
+    [Route("/api/items")]
     public class ItemController : Controller
     {
         private readonly IMapper _mapper;
@@ -23,8 +24,9 @@ namespace Prices.Web.Server.Controllers
             _mapper = mapper;
         }
 
-        [Authorize, HttpPost("create")]
-        public async Task<IActionResult> CreateItem([FromBody]AddItemModel model)
+        [Authorize]
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateItem([FromBody] AddItemModel model)
         {
             var validator = new ItemModelValidator();
             var validationResult = await validator.ValidateAsync(model);

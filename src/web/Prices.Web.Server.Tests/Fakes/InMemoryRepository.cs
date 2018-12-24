@@ -10,20 +10,28 @@ namespace Prices.Web.Server.Tests.Fakes
     {
         protected readonly List<T> Items;
 
-        protected InMemoryRepository(List<T> items) 
-            => Items = items;
+        protected InMemoryRepository(List<T> items)
+        {
+            Items = items;
+        }
 
-        public Task<List<T>> GetAll() 
-            => Task.FromResult(Items);
+        public Task<List<T>> GetAll()
+        {
+            return Task.FromResult(Items);
+        }
 
-        public Task<List<T>> ByPartitionKey(string value) 
-            => Task.FromResult(Items.Where(item => item.PartitionKey == value).ToList());
+        public Task<List<T>> ByPartitionKey(string value)
+        {
+            return Task.FromResult(Items.Where(item => item.PartitionKey == value).ToList());
+        }
 
-        public Task<bool> Add(T item) 
-            => Task.Run(() =>
+        public Task<bool> Add(T item)
+        {
+            return Task.Run(() =>
             {
                 Items.Add(item);
                 return true;
             });
+        }
     }
 }

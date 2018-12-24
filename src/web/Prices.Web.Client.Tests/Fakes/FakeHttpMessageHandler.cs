@@ -30,12 +30,18 @@ namespace Prices.Web.Client.Tests.Fakes
         {
             StatusCode = HttpStatusCode.NotFound
         });
-        
-        public static FakeHttpMessageHandler WithNoCotentResult() => new FakeHttpMessageHandler(new HttpResponseMessage
+
+        public static FakeHttpMessageHandler WithBadRequestResponse(HttpContent content = null) => new FakeHttpMessageHandler(new HttpResponseMessage
+        {
+            StatusCode = HttpStatusCode.BadRequest,
+            Content = content
+        });
+
+
+        public static FakeHttpMessageHandler WithNoContentResult() => new FakeHttpMessageHandler(new HttpResponseMessage
         {
             StatusCode = HttpStatusCode.NotFound
         });
-
 
         public static FakeHttpMessageHandler WithResult<T>(T result) => new FakeHttpMessageHandler(new HttpResponseMessage
         {

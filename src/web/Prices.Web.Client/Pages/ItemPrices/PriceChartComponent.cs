@@ -19,7 +19,7 @@ namespace Prices.Web.Client.Pages.ItemPrices
 
         protected ChartJsLineChart LineChartJs;
         protected LineChartConfig ChartConfig { set; get; } = new LineChartConfig();
-        
+
         [Inject] protected HttpClient Client { get; set; }
         [Inject] protected ILogger<PriceChartComponent> Logger { get; set; }
 
@@ -28,10 +28,10 @@ namespace Prices.Web.Client.Pages.ItemPrices
             ChartConfig = new LineChartConfig();
 
             var chartData = await Client.GetAsync("/api/prices/ChartData");
-            ChartConfig = chartData.IsSuccessStatusCode 
-                ? await BuildChartConfig(chartData) 
+            ChartConfig = chartData.IsSuccessStatusCode
+                ? await BuildChartConfig(chartData)
                 : new LineChartConfig();
-            
+
 //            LineChartJs.Reload();
         }
 
@@ -61,10 +61,10 @@ namespace Prices.Web.Client.Pages.ItemPrices
                         Position = LegendPosition.TOP.ToString(),
                         Labels = new Labels
                         {
-                            UsePointStyle = true,
+                            UsePointStyle = true
                         }
                     },
-                    Hover = new LineChartOptionsHover()
+                    Hover = new LineChartOptionsHover
                     {
                         Intersect = true,
                         Mode = Mode.nearest
@@ -73,7 +73,7 @@ namespace Prices.Web.Client.Pages.ItemPrices
                     {
                         Mode = Mode.nearest,
                         Intersect = true
-                    },
+                    }
                 },
                 Data = new LineChartData
                 {
@@ -86,21 +86,22 @@ namespace Prices.Web.Client.Pages.ItemPrices
             {
                 var chartDataSet = new LineChartDataset
                 {
-                    Label = dataSet.Label, 
+                    Label = dataSet.Label,
                     BackgroundColor = GetRandomColor(),
-                    BorderColor = GetRandomColor(), 
+                    BorderColor = GetRandomColor(),
                     BorderWidth = 2,
                     PointRadius = 3,
                     PointBorderWidth = 1,
                     Data = new List<object>()
                 };
-                
+
                 foreach (var datum in dataSet.Data)
                     chartDataSet.Data.Add(datum);
 
                 buildChartConfig.Data.Datasets.Add(chartDataSet);
             }
-            return  buildChartConfig;
+
+            return buildChartConfig;
         }
 
         private string GetRandomColor()

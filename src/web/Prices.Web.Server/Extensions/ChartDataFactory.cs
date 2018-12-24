@@ -31,13 +31,18 @@ namespace Prices.Web.Server.Extensions
             return chartData;
         }
 
-        private static List<string> BuildData(IReadOnlyCollection<ItemPriceEntity> itemPrices, 
-            IEnumerable<DateTime> dateTimes) => dateTimes
-            .Select(pricesDate => itemPrices.FirstOrDefault(x => x.PriceDate.Date == pricesDate.Date))
-            .Select(priceEntity => priceEntity == null ? string.Empty : GetPriceFromRecord(priceEntity))
-            .ToList();
+        private static List<string> BuildData(IReadOnlyCollection<ItemPriceEntity> itemPrices,
+            IEnumerable<DateTime> dateTimes)
+        {
+            return dateTimes
+                .Select(pricesDate => itemPrices.FirstOrDefault(x => x.PriceDate.Date == pricesDate.Date))
+                .Select(priceEntity => priceEntity == null ? string.Empty : GetPriceFromRecord(priceEntity))
+                .ToList();
+        }
 
-        private static string GetPriceFromRecord(ItemPriceEntity otherThing) 
-            => string.IsNullOrWhiteSpace(otherThing.Price) ? "" : otherThing.Price.Remove(0, 1);
+        private static string GetPriceFromRecord(ItemPriceEntity otherThing)
+        {
+            return string.IsNullOrWhiteSpace(otherThing.Price) ? "" : otherThing.Price.Remove(0, 1);
+        }
     }
 }

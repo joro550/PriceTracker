@@ -21,13 +21,19 @@ namespace Prices.Web.Server.Tests.Fakes
         {
         }
 
-        public static FakeItemRepository WithItems(List<ItemEntity> items) 
-            => new FakeItemRepository(items);
+        public static FakeItemRepository WithItems(List<ItemEntity> items)
+        {
+            return new FakeItemRepository(items);
+        }
 
-        public static FakeItemRepository WithStandardItems() 
-            => new FakeItemRepository(StandardItems);
+        public static FakeItemRepository WithStandardItems()
+        {
+            return new FakeItemRepository(StandardItems);
+        }
 
-        public static FakeItemRepository WithNoItems() 
-            => new FakeItemRepository(new List<ItemEntity>());
+        public static FakeItemRepository WithNoItems()
+        {
+            return new FakeItemRepository(new List<ItemEntity>());
+        }
     }
 }
