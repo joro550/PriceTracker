@@ -1,18 +1,18 @@
-﻿@page "/items"
+﻿@page "/item/list"
 @page "/"
 @inherits ListItemComponent
 
-<div class='d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3'>
-    <h1 class='h2'>Items</h1>
-    <div class='btn-toolbar mb-2 mb-md-0'>
-        <div class='btn-group mr-2'>
-            <a class='btn btn-sm btn-outline-secondary'>Add Item</a>
-            <NavLink href='/prices' class='btn btn-sm btn-outline-secondary'>All Prices</NavLink>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+    <h1 class="h2">Items</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group mr-2">
+            <NavLink href="/item/add" class="btn btn-sm btn-outline-secondary">Add Item</NavLink>
+            <NavLink href="/prices" class="btn btn-sm btn-outline-secondary">All Prices</NavLink>
         </div>
     </div>
 </div>
-<div class='table-responsive'>
-    <table class='table table-striped table-sm'>
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
         <thead>
         <tr>
             <th>Id</th>

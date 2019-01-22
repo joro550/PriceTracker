@@ -19,4 +19,10 @@
     <ProjectReference Include="..\Prices.Web.Shared\Prices.Web.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Mvc.Testing, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
+      <HintPath>C:\Users\sblas\.nuget\packages\microsoft.aspnetcore.mvc.testing\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Testing.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

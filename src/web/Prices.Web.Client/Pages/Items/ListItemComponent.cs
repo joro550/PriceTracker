@@ -13,21 +13,14 @@ namespace Prices.Web.Client.Pages.Items
 
         protected List<Item> Items { get; private set; } = new List<Item>();
 
-        protected override async Task OnInitAsync()
-        {
-            Items = await GetItems(await Client.GetAsync("/api/items"));
-        }
+        protected override async Task OnInitAsync() 
+            => Items = await GetItems(await Client.GetAsync("/api/items"));
 
-        private static async Task<List<Item>> GetItems(HttpResponseMessage responseMessage)
-        {
-            return responseMessage.IsSuccessStatusCode
-                ? await FromClientContent(responseMessage)
-                : new List<Item>();
-        }
+        private static async Task<List<Item>> GetItems(HttpResponseMessage responseMessage) => responseMessage.IsSuccessStatusCode
+            ? await FromClientContent(responseMessage)
+            : new List<Item>();
 
-        private static async Task<List<Item>> FromClientContent(HttpResponseMessage responseMessage)
-        {
-            return Json.Deserialize<List<Item>>(await responseMessage.Content.ReadAsStringAsync());
-        }
+        private static async Task<List<Item>> FromClientContent(HttpResponseMessage responseMessage) 
+            => Json.Deserialize<List<Item>>(await responseMessage.Content.ReadAsStringAsync());
     }
 }

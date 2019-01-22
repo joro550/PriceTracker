@@ -1,18 +1,18 @@
-﻿using MediatR;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Prices.Web.Server.Handlers.Requests;
 using Prices.Web.Server.Identity;
 using Prices.Web.Shared.Models.Users;
-using Prices.Web.Server.Handlers.Requests;
 
 namespace Prices.Web.Server.Controllers
 {
     [Route("/api/user")]
     public class UserController : Controller
     {
+        private readonly ICipherService _cipherService;
         private readonly IMediator _mediator;
         private readonly ITokenService _tokenService;
-        private readonly ICipherService _cipherService;
 
         public UserController(IMediator mediator, ITokenService tokenService, ICipherService cipherService)
         {
@@ -22,18 +22,18 @@ namespace Prices.Web.Server.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody]UserModel user)
+        public async Task<IActionResult> Login([FromBody] UserModel user)
         {
             var validationResult = await new UserModelValidator().ValidateAsync(user);
             if (!validationResult.IsValid)
                 return BadRequest();
-            
+
             var userEntity = await _mediator.Send(new GetUserByUsernameRequest {Username = user.Username});
             var validatePasswordAgainstHash =
                 _cipherService.ValidatePasswordAgainstHash(user.Password, userEntity.PasswordSalt, userEntity.Password);
 
             if (validatePasswordAgainstHash)
-                return Ok(new TokenResult { Token = _tokenService.BuildToken(user.Username)});
+                return Ok(new TokenResult {Token = _tokenService.BuildToken(user.Username)});
             return BadRequest();
         }
 

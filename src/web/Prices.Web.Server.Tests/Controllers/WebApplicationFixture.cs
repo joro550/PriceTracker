@@ -4,7 +4,9 @@
     {
         protected internal readonly WebApplicationBuilder ApplicationBuilder;
 
-        public WebApplicationFixture() 
-            => ApplicationBuilder = new WebApplicationBuilder();
+        public WebApplicationFixture()
+        {
+            ApplicationBuilder = new WebApplicationBuilder();
+        }
     }
 }

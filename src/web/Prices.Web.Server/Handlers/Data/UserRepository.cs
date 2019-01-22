@@ -14,7 +14,7 @@ namespace Prices.Web.Server.Handlers.Data
         Task<UserEntity> GetByUsername(string userUserName);
         Task<UserEntity> GetById(string userId);
     }
-    
+
     public class UserRepository : Repository<UserEntity>, IUserRepository
     {
         public UserRepository(CloudTableClient client)
@@ -25,7 +25,8 @@ namespace Prices.Web.Server.Handlers.Data
         public async Task<UserEntity> GetByUsername(string userUserName)
         {
             var tableQuery = new TableQuery<UserEntity>()
-                .Where(TableQuery.GenerateFilterCondition(nameof(UserEntity.Username), QueryComparisons.Equal, userUserName));
+                .Where(TableQuery.GenerateFilterCondition(nameof(UserEntity.Username), QueryComparisons.Equal,
+                    userUserName));
             var results = await TableClient.ExecuteQuerySegmentedAsync(tableQuery, new TableContinuationToken());
             return results.Results.SingleOrDefault();
         }

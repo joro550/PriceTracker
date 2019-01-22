@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Prices.Web.Client.Pages.Items;
 using Prices.Web.Shared.Models.Home;
 
-namespace Prices.Web.Client.Tests.Pages.Items
+namespace Prices.Web.Client.Tests.Pages.Items.ListItems
 {
     public class ListItemComponentWrapper : ListItemComponent
     {
@@ -13,10 +13,14 @@ namespace Prices.Web.Client.Tests.Pages.Items
             Client = client;
         }
 
-        public List<Item> GetItems() 
-            => Items;
+        public List<Item> GetItems()
+        {
+            return Items;
+        }
 
-        public async Task InitAsync() 
-            => await OnInitAsync();
+        public async Task InitAsync()
+        {
+            await OnInitAsync();
+        }
     }
 }

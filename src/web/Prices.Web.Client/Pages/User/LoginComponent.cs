@@ -1,32 +1,35 @@
-﻿using System.Net.Http;
-using System.Text;
+﻿using System;
+using BlazorState;
+using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Blazor.Components;
-using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
+using Prices.Web.Client.Data;
+using Microsoft.AspNetCore.Blazor;
 using Prices.Web.Shared.Models.Users;
+using Microsoft.AspNetCore.Blazor.Services;
+using Microsoft.AspNetCore.Blazor.Components;
 
 namespace Prices.Web.Client.Pages.User
 {
-    public class LoginComponent : BlazorComponent
+    public class LoginComponent : BlazorStateComponent
     {
         [Inject] protected HttpClient Client { private get; set; }
-        [Inject] protected  ILogger<LoginComponent> Logger { get; set; }
+        [Inject] protected IUriHelper UriHelper { get; set; }
+        
+        public bool ShowLoginErrors;
         protected UserModel User { get; } = new UserModel();
 
-        protected async Task Login()
+        public async Task Login()
         {
-            var serialize = Json.Serialize(User);
-            Logger.LogDebug(serialize);
-
-            var stringContent = new StringContent(serialize, Encoding.UTF8, "application/json");
-//            var response = await Client.PostAsync("/api/user/login", stringContent);
-//            Logger.LogDebug(response.StatusCode.ToString());
-
-
-            var response = await Client.GetAsync("/api/items/hello");
-            Logger.LogDebug(response.StatusCode.ToString());
-
+            try
+            {
+                var result = await Client.PostJsonAsync<TokenResult>("/api/user/login", User);
+                await Mediator.Send(new LoginRequest {UserToken = result.Token});
+                UriHelper.NavigateTo("/");
+            }
+            catch (Exception)
+            {
+                ShowLoginErrors = true;
+            }
         }
     }
 }

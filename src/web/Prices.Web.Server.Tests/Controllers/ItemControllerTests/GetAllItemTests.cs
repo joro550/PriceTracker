@@ -13,13 +13,16 @@ namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
 {
     public class GetAllItemTests : IClassFixture<WebApplicationFixture>
     {
+        public GetAllItemTests(WebApplicationFixture webApplicationFixture)
+        {
+            _applicationBuilder = webApplicationFixture.ApplicationBuilder;
+        }
+
         private readonly WebApplicationBuilder _applicationBuilder;
 
-        public GetAllItemTests(WebApplicationFixture webApplicationFixture) 
-            => _applicationBuilder = webApplicationFixture.ApplicationBuilder;
-        
-        
-        [Theory, AutoData]
+
+        [Theory]
+        [AutoData]
         public async Task WhenItemsExist_ThenItemsAreReturned(List<ItemEntity> items)
         {
             var application = _applicationBuilder
@@ -40,7 +43,7 @@ namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
             var application = _applicationBuilder
                 .WithItemRepository(FakeItemRepository.WithNoItems())
                 .Build();
-            
+
             var response = await application.GetAsync("/api/items");
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
