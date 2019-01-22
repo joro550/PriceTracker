@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Prices.Web.Shared.Models.Items
 {
@@ -14,7 +15,7 @@ namespace Prices.Web.Shared.Models.Items
                 .WithMessage("Please specify a known retailer");
         }
 
-        private bool BeAKnownRetailer(string arg) 
-            => _knownRetailers.Contains(arg);
+        private static bool BeAKnownRetailer(IEnumerable<SelectListItem> knownRetailers, string retailerValue) 
+            => knownRetailers.Select(retailer => retailer.Value).Contains(retailerValue);
     }
 }

@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.TestHost;
 using Prices.Web.Server.Tests.Fakes;
 using Prices.Web.Server.Handlers.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Prices.Web.Server.Tests.Controllers
 {
