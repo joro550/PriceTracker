@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoFixture;
 using Prices.Web.Server.Tests.Fakes;
 using Prices.Web.Shared.Models.Items;
 
@@ -26,18 +27,30 @@ namespace Prices.Web.Server.Tests.Controllers.ItemControllerTests
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
-        [Fact]
-        public async Task WhenItemModelIsNull_ThenBadRequestIsReturned()
+        public class InvalidModelTests : IClassFixture<WebApplicationFixture>
         {
-            var webApplication = _fixture
-                .WithUserRepository(FakeUserRepository.WithDefaultUsers())
-                .WithItemRepository(FakeItemRepository.WithNoItems())
-                .Build();
+            private readonly HttpClient _webApplication;
+            private Fixture _autoFixture;
 
-            var response = await webApplication
-                .AuthorizeWith(FakeUserRepository.NormalUser)
-                .PostAsJsonAsync("/api/items/create", new AddItemModel());
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            public InvalidModelTests(WebApplicationFixture fixture)
+            {
+                _autoFixture = new Fixture();
+
+                _webApplication = fixture.ApplicationBuilder
+                    .WithUserRepository(FakeUserRepository.WithDefaultUsers())
+                    .WithItemRepository(FakeItemRepository.WithNoItems())
+                    .Build()
+                    .AuthorizeWith(FakeUserRepository.NormalUser);
+            }
+
+            [Fact]
+            public async Task WhenItemModelIsEmpty_ThenBadRequestIsReturned()
+            {
+                var addItemModel = new AddItemModel();
+                var response = await _webApplication
+                    .PostAsJsonAsync("/api/items/create", addItemModel);
+                Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            }
         }
     }
 }

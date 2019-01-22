@@ -25,7 +25,9 @@ namespace Prices.Web.Server.Controllers
         [HttpPost("create"), Authorize]
         public async Task<IActionResult> CreateItem([FromBody]AddItemModel model)
         {
-            return BadRequest();
+            var validator = new ItemModelValidator();
+            var validationResult = await validator.ValidateAsync(model);
+            return BadRequest(validationResult.Errors);
         }
 
 //        [HttpPost]
